@@ -1,0 +1,30 @@
+.register-container {
+  min-height: calc(100vh - 200px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xl);
+}
+
+.register-wrapper {
+  width: 100%;
+  max-width: 450px;
+}
+
+.register-header {
+  margin-bottom: var(--spacing-xl);
+}
+
+.register-footer {
+  margin-top: var(--spacing-lg);
+}
+
+.link-primary {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.link-primary:hover {
+  text-decoration: underline;
+}

@@ -1,0 +1,6 @@
+﻿/* Los estilos principales están en styles.css global */
+/* Aquí solo estilos específicos del dashboard si se necesitan */
+
+.ml-sm {
+  margin-left: var(--spacing-sm);
+}

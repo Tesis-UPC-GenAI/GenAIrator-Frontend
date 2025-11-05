@@ -1,0 +1,37 @@
+.login-container {
+  min-height: calc(100vh - 200px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xl);
+}
+
+.login-wrapper {
+  width: 100%;
+  max-width: 450px;
+}
+
+.login-header {
+  margin-bottom: var(--spacing-xl);
+}
+
+.login-footer {
+  margin-top: var(--spacing-lg);
+}
+
+.link-primary {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.link-primary:hover {
+  text-decoration: underline;
+}
+
+.demo-info {
+  margin-top: var(--spacing-md);
+  padding: var(--spacing-md);
+  background-color: var(--bg-secondary);
+  border-radius: var(--radius-md);
+}
