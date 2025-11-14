@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { DesignSystemService } from '../../core/services/design-system.service';
 import { CardComponent } from '../../shared/components/card/card.component';
 
 @Component({
@@ -16,13 +18,14 @@ import { CardComponent } from '../../shared/components/card/card.component';
           <p class="text-secondary mt-sm">Configura y genera código optimizado para tu proyecto</p>
         </div>
 
-        <div class="grid grid-cols-1 grid-cols-lg-3" style="grid-template-columns: 1fr 2fr;">
+  <form [formGroup]="generationForm" (ngSubmit)="onGenerate()">
+  <div class="grid grid-cols-1 grid-cols-lg-3" style="grid-template-columns: 1fr 2fr;">
           <!-- Sidebar de configuración -->
           <div>
             <app-card>
               <h2 class="text-lg font-semibold mb-lg">⚙️ Configuración</h2>
 
-              <form [formGroup]="generationForm" (ngSubmit)="onGenerate()">
+              
                 <h3 class="text-md font-semibold mb-md pt-md" style="border-top: 1px solid #eee;">
                   Frontend
                 </h3>
@@ -83,7 +86,7 @@ import { CardComponent } from '../../shared/components/card/card.component';
                     Incluir documentación
                   </label>
                 </div>
-              </form>
+              
             </app-card>
           </div>
 
@@ -91,12 +94,17 @@ import { CardComponent } from '../../shared/components/card/card.component';
           <div>
             <app-card>
               <h2 class="text-xl font-semibold mb-md">📋 Vista Previa</h2>
-              <div class="empty-state">
-                <div class="empty-state-icon">🔧</div>
-                <h3 class="empty-state-title">Configura tu generación</h3>
-                <p class="empty-state-description">
-                  Selecciona un design system importado y configura las opciones de generación.
-                </p>
+
+              <div class="mb-md">
+                <label class="form-label">Design System</label>
+                <select class="form-input" formControlName="designSystemId">
+                  <option [ngValue]="null">-- Selecciona un design system --</option>
+                  <option *ngFor="let ds of designSystems$ | async" [value]="ds.dsId">{{ ds.nombre }}</option>
+                </select>
+              </div>
+
+              <div class="mt-sm text-secondary">
+                <small>Selecciona uno de tus design systems subidos para usar en la generación.</small>
               </div>
             </app-card>
 
@@ -105,7 +113,8 @@ import { CardComponent } from '../../shared/components/card/card.component';
               <button class="btn btn-primary" (click)="onGenerate()">Generar Código</button>
             </div>
           </div>
-        </div>
+  </div>
+  </form>
       </div>
     </div>
   `,
@@ -115,17 +124,26 @@ import { CardComponent } from '../../shared/components/card/card.component';
     `,
   ],
 })
-export class GenerateComponent {
+export class GenerateComponent implements OnInit {
   generationForm: FormGroup;
+  designSystems$!: Observable<any[]>;
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private designSystemService: DesignSystemService
+  ) {
     this.generationForm = this.fb.group({
       framework: ['Angular'],
       lenguaje: ['TypeScript'],
       estilo: ['Tailwind'],
       incluirTests: [false],
       incluirDoc: [false],
+      designSystemId: [null, Validators.required],
     });
+  }
+
+  ngOnInit(): void {
+    this.designSystems$ = this.designSystemService.getDesignSystems();
   }
 
   onGenerate(): void {
