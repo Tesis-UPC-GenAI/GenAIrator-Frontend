@@ -15,7 +15,7 @@ import { CardComponent } from '../../shared/components/card/card.component';
   standalone: true,
   imports: [CommonModule, RouterModule, CardComponent],
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+  styleUrls: ['./dashboard.component.css'],
 })
 export class DashboardComponent implements OnInit {
   currentUser: User | null = null;

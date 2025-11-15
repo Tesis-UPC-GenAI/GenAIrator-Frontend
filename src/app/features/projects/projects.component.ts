@@ -14,9 +14,7 @@ import { Observable } from 'rxjs';
       <div class="container">
         <div class="dashboard-header">
           <h1>Mis Proyectos</h1>
-          <p class="text-secondary mt-sm">
-            Gestiona todos tus proyectos de generación de código
-          </p>
+          <p class="text-secondary mt-sm">Gestiona todos tus proyectos de generación de código</p>
         </div>
 
         <ng-container *ngIf="proyectos$ | async as proyectos">
@@ -30,9 +28,7 @@ import { Observable } from 'rxjs';
               <a routerLink="/import-design-system" class="btn btn-primary">
                 Importar Design System
               </a>
-              <a routerLink="/generate" class="btn btn-secondary">
-                Nuevo Proyecto
-              </a>
+              <a routerLink="/generate" class="btn btn-secondary"> Nuevo Proyecto </a>
             </div>
           </div>
 
@@ -40,17 +36,23 @@ import { Observable } from 'rxjs';
             <app-card *ngFor="let p of proyectos" class="card-interactive">
               <div class="flex justify-between items-center mb-md">
                 <h3 class="text-lg font-semibold">{{ p.framework }} - {{ p.id }}</h3>
-                <span class="badge" [ngClass]="{
-                  'badge-warning': p.status === 'Pending' || p.status === 'Processing',
-                  'badge-success': p.status === 'Completed',
-                  'badge-danger': p.status === 'Failed'
-                }">{{ p.status }}</span>
+                <span
+                  class="badge"
+                  [ngClass]="{
+                    'badge-warning': p.status === 'Pending' || p.status === 'Processing',
+                    'badge-success': p.status === 'Completed',
+                    'badge-danger': p.status === 'Failed'
+                  }"
+                  >{{ p.status }}</span
+                >
               </div>
               <p class="text-secondary mb-lg text-sm">
-                Generado: {{ p.fechaCreacion | date:'short' }}
+                Generado: {{ p.fechaCreacion | date : 'short' }}
               </p>
               <div class="flex gap-sm">
-                <a class="btn btn-primary" [routerLink]="['/results']" [queryParams]="{ id: p.id }">Ver</a>
+                <a class="btn btn-primary" [routerLink]="['/results']" [queryParams]="{ id: p.id }"
+                  >Ver</a
+                >
               </div>
             </app-card>
           </div>
@@ -58,9 +60,11 @@ import { Observable } from 'rxjs';
       </div>
     </div>
   `,
-  styles: [`
-    /* Estilos específicos si se necesitan */
-  `]
+  styles: [
+    `
+      /* Estilos específicos si se necesitan */
+    `,
+  ],
 })
 export class ProjectsComponent implements OnInit {
   proyectos$!: Observable<any[]>;
