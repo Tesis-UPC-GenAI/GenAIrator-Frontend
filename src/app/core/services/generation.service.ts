@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { GenerationRequest } from '../models/generation-request.model';
 import { AuthService } from './auth.service';
 
 @Injectable({
@@ -20,21 +21,21 @@ export class GenerationService {
     return this.http.post<any>(`${this.baseUrl}/start`, data, { headers });
   }
 
-  getRequests(): Observable<any[]> {
+  getRequests(): Observable<GenerationRequest[]> {
     const token = this.auth.getToken();
     const headers = token
       ? new HttpHeaders({ Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' })
       : new HttpHeaders({ 'Content-Type': 'application/json' });
 
-    return this.http.get<any[]>(`${this.baseUrl}/requests`, { headers });
+    return this.http.get<GenerationRequest[]>(`${this.baseUrl}/requests`, { headers });
   }
 
-  getAllRequests(): Observable<any[]> {
+  getAllRequests(): Observable<GenerationRequest[]> {
     const token = this.auth.getToken();
     const headers = token
       ? new HttpHeaders({ Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' })
       : new HttpHeaders({ 'Content-Type': 'application/json' });
 
-    return this.http.get<any[]>(`${this.baseUrl}/requests/all`, { headers });
+    return this.http.get<GenerationRequest[]>(`${this.baseUrl}/requests/all`, { headers });
   }
 }

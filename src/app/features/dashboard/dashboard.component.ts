@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { GenerationService } from '../../core/services/generation.service';
 import { Observable } from 'rxjs';
+import { GenerationRequest } from '../../core/models/generation-request.model';
 import { User } from '../../core/models/user.model';
 import { CardComponent } from '../../shared/components/card/card.component';
 
@@ -19,7 +20,7 @@ import { CardComponent } from '../../shared/components/card/card.component';
 })
 export class DashboardComponent implements OnInit {
   currentUser: User | null = null;
-  proyectosRecientes$!: Observable<any[]>;
+  proyectosRecientes$!: Observable<GenerationRequest[]>;
   constructor(private authService: AuthService, private generationService: GenerationService) {}
 
   ngOnInit(): void {

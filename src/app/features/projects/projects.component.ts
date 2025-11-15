@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { CardComponent } from '../../shared/components/card/card.component';
 import { GenerationService } from '../../core/services/generation.service';
 import { Observable } from 'rxjs';
+import { GenerationRequest } from '../../core/models/generation-request.model';
 
 @Component({
   selector: 'app-projects',
@@ -67,7 +68,7 @@ import { Observable } from 'rxjs';
   ],
 })
 export class ProjectsComponent implements OnInit {
-  proyectos$!: Observable<any[]>;
+  proyectos$!: Observable<GenerationRequest[]>;
 
   constructor(private generationService: GenerationService) {}
 
