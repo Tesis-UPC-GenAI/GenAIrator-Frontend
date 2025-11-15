@@ -114,7 +114,7 @@ import { CardComponent } from '../../shared/components/card/card.component';
 
               <div class="flex gap-md mt-lg justify-end">
                 <a routerLink="/dashboard" class="btn btn-secondary"> Cancelar </a>
-                <button class="btn btn-primary" (click)="onGenerate()">Generar Código</button>
+                <button type="submit" class="btn btn-primary">Generar Código</button>
               </div>
             </div>
           </div>
