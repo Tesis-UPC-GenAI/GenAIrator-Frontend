@@ -11,12 +11,27 @@
       <app-card class="feature-card">
         <div class="feature-icon"></div>
         <h2 class="text-xl font-semibold mb-md">Proyectos Recientes</h2>
-        <p class="text-secondary mb-lg">
-          Aquí se mostrarán tus proyectos más recientes.
-        </p>
-        <a routerLink="/projects" class="btn btn-primary">
-          Ver todos los proyectos
-        </a>
+        <p class="text-secondary mb-lg">Tus últimas generaciones aparecerán aquí.</p>
+
+        <ng-container *ngIf="proyectosRecientes$ | async as proyectos; else noProjects">
+          <ul class="recent-list">
+            <li *ngFor="let p of proyectos | slice:0:5" class="recent-item">
+              <div class="recent-title">{{ p.framework }}</div>
+              <div class="recent-meta">
+                <span class="badge" [ngClass]="{
+                  'badge-warning': p.status === 'Pending' || p.status === 'Processing',
+                  'badge-success': p.status === 'Completed',
+                  'badge-danger': p.status === 'Failed'
+                }">{{ p.status }}</span>
+                <small class="text-secondary">{{ p.fechaCreacion | date:'short' }}</small>
+              </div>
+            </li>
+          </ul>
+          <a routerLink="/projects" class="btn btn-primary mt-md">Ver todos los proyectos</a>
+        </ng-container>
+        <ng-template #noProjects>
+          <p class="text-secondary">No hay proyectos recientes.</p>
+        </ng-template>
       </app-card>
 
       <app-card class="feature-card">
