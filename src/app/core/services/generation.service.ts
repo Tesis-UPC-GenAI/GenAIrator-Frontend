@@ -28,4 +28,13 @@ export class GenerationService {
 
     return this.http.get<any[]>(`${this.baseUrl}/requests`, { headers });
   }
+
+  getAllRequests(): Observable<any[]> {
+    const token = this.auth.getToken();
+    const headers = token
+      ? new HttpHeaders({ Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' })
+      : new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    return this.http.get<any[]>(`${this.baseUrl}/requests/all`, { headers });
+  }
 }
