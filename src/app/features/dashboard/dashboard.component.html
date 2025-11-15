@@ -14,19 +14,25 @@
         <p class="text-secondary mb-lg">Tus últimas generaciones aparecerán aquí.</p>
 
         <ng-container *ngIf="proyectosRecientes$ | async as proyectos; else noProjects">
-          <ul class="recent-list">
-            <li *ngFor="let p of proyectos | slice:0:5" class="recent-item">
-              <div class="recent-title">{{ p.framework }}</div>
-              <div class="recent-meta">
+          <div *ngIf="proyectos.length === 0" class="text-secondary">No hay proyectos recientes.</div>
+
+          <div *ngIf="proyectos.length > 0" class="grid grid-cols-1 grid-cols-md-2 grid-cols-lg-3">
+            <app-card *ngFor="let p of proyectos | slice:0:3" class="card-interactive">
+              <div class="flex justify-between items-center mb-md">
+                <h3 class="text-lg font-semibold">{{ p.framework }} - {{ p.id }}</h3>
                 <span class="badge" [ngClass]="{
                   'badge-warning': p.status === 'Pending' || p.status === 'Processing',
                   'badge-success': p.status === 'Completed',
                   'badge-danger': p.status === 'Failed'
                 }">{{ p.status }}</span>
-                <small class="text-secondary">{{ p.fechaCreacion | date:'short' }}</small>
               </div>
-            </li>
-          </ul>
+              <p class="text-secondary mb-lg text-sm">Generado: {{ p.fechaCreacion | date:'short' }}</p>
+              <div class="flex gap-sm">
+                <a class="btn btn-primary" [routerLink]="['/results']" [queryParams]="{ id: p.id }">Ver</a>
+              </div>
+            </app-card>
+          </div>
+
           <a routerLink="/projects" class="btn btn-primary mt-md">Ver todos los proyectos</a>
         </ng-container>
         <ng-template #noProjects>
@@ -37,27 +43,19 @@
       <app-card class="feature-card">
         <div class="feature-icon"></div>
         <h2 class="text-xl font-semibold mb-md">Design Systems</h2>
-        <p class="text-secondary mb-lg">
-          Importa y gestiona tus design systems.
-        </p>
-        <a routerLink="/import-design-system" class="btn btn-primary">
-          Importar Design System
-        </a>
+        <p class="text-secondary mb-lg">Importa y gestiona tus design systems.</p>
+        <a routerLink="/import-design-system" class="btn btn-primary"> Importar Design System </a>
       </app-card>
 
       <app-card class="feature-card">
         <div class="feature-icon"></div>
         <h2 class="text-xl font-semibold mb-md">Generar Código</h2>
-        <p class="text-secondary mb-lg">
-          Genera código a partir de tus diseños.
-        </p>
-        <a routerLink="/generate" class="btn btn-primary">
-          Comenzar a generar
-        </a>
+        <p class="text-secondary mb-lg">Genera código a partir de tus diseños.</p>
+        <a routerLink="/generate" class="btn btn-primary"> Comenzar a generar </a>
       </app-card>
 
       <app-card>
-        <h2 class="text-xl font-semibold mb-lg"> Estadísticas</h2>
+        <h2 class="text-xl font-semibold mb-lg">Estadísticas</h2>
         <div class="stats">
           <div class="stat-item">
             <span class="stat-value">0</span>
@@ -75,22 +73,16 @@
       </app-card>
 
       <app-card class="card-highlight">
-        <h2 class="text-xl font-semibold mb-md"> Acciones Rápidas</h2>
+        <h2 class="text-xl font-semibold mb-md">Acciones Rápidas</h2>
         <div class="flex flex-col gap-md">
-          <a routerLink="/import-design-system" class="btn btn-secondary">
-            Importar diseño
-          </a>
-          <a routerLink="/generate" class="btn btn-secondary">
-            Generar componente
-          </a>
-          <a routerLink="/projects" class="btn btn-secondary">
-            Ver proyectos
-          </a>
+          <a routerLink="/import-design-system" class="btn btn-secondary"> Importar diseño </a>
+          <a routerLink="/generate" class="btn btn-secondary"> Generar componente </a>
+          <a routerLink="/projects" class="btn btn-secondary"> Ver proyectos </a>
         </div>
       </app-card>
 
       <app-card>
-        <h2 class="text-xl font-semibold mb-md"> Novedades</h2>
+        <h2 class="text-xl font-semibold mb-md">Novedades</h2>
         <p class="text-secondary">
           Mantente al día con las últimas actualizaciones y características de la plataforma.
         </p>
