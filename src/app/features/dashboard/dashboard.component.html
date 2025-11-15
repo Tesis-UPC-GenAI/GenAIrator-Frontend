@@ -14,23 +14,25 @@
         <p class="text-secondary mb-lg">Tus últimas generaciones aparecerán aquí.</p>
 
         <ng-container *ngIf="proyectosRecientes$ | async as proyectos; else noProjects">
-          <div *ngIf="proyectos.length === 0" class="text-secondary">No hay proyectos recientes.</div>
+          <div *ngIf="proyectos.length === 0" class="text-secondary">
+            No hay proyectos recientes.
+          </div>
 
-          <div *ngIf="proyectos.length > 0" class="grid grid-cols-1 grid-cols-md-2 grid-cols-lg-3">
-            <app-card *ngFor="let p of proyectos | slice:0:3" class="card-interactive">
-              <div class="flex justify-between items-center mb-md">
-                <h3 class="text-lg font-semibold">{{ p.framework }} - {{ p.id }}</h3>
+          <div *ngIf="proyectos.length > 0" class="recent-rows">
+            <div *ngFor="let p of proyectos | slice:0:3" class="recent-row">
+              <div class="recent-left">
+                <div class="project-title">{{ p.framework }} - {{ p.id }}</div>
+                <div class="project-sub text-secondary">Generado: {{ p.fechaCreacion | date:'short' }}</div>
+              </div>
+              <div class="recent-right">
                 <span class="badge" [ngClass]="{
                   'badge-warning': p.status === 'Pending' || p.status === 'Processing',
                   'badge-success': p.status === 'Completed',
                   'badge-danger': p.status === 'Failed'
                 }">{{ p.status }}</span>
+                <a class="btn btn-primary ml-sm" [routerLink]="['/results']" [queryParams]="{ id: p.id }">Ver</a>
               </div>
-              <p class="text-secondary mb-lg text-sm">Generado: {{ p.fechaCreacion | date:'short' }}</p>
-              <div class="flex gap-sm">
-                <a class="btn btn-primary" [routerLink]="['/results']" [queryParams]="{ id: p.id }">Ver</a>
-              </div>
-            </app-card>
+            </div>
           </div>
 
           <a routerLink="/projects" class="btn btn-primary mt-md">Ver todos los proyectos</a>
