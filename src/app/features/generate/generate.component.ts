@@ -4,6 +4,8 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { DesignSystemService } from '../../core/services/design-system.service';
+import { GenerationService } from '../../core/services/generation.service';
+import { Router } from '@angular/router';
 import { CardComponent } from '../../shared/components/card/card.component';
 
 @Component({
@@ -130,7 +132,12 @@ export class GenerateComponent implements OnInit {
   generationForm: FormGroup;
   designSystems$!: Observable<any[]>;
 
-  constructor(private fb: FormBuilder, private designSystemService: DesignSystemService) {
+  constructor(
+    private fb: FormBuilder,
+    private designSystemService: DesignSystemService,
+    private generationService: GenerationService,
+    private router: Router
+  ) {
     this.generationForm = this.fb.group({
       framework: ['Angular'],
       lenguaje: ['TypeScript'],
@@ -146,7 +153,20 @@ export class GenerateComponent implements OnInit {
   }
 
   onGenerate(): void {
-    // Por ahora sólo registramos los valores; más adelante podemos enviar al backend
-    console.log('Generación solicitada:', this.generationForm.value);
+    if (this.generationForm.invalid) {
+      alert('Por favor completa el formulario antes de generar.');
+      return;
+    }
+
+    this.generationService.startGeneration(this.generationForm.value).subscribe({
+      next: (res) => {
+        alert('Generación iniciada');
+        this.router.navigate(['/dashboard']);
+      },
+      error: (err) => {
+        console.error('Error iniciando generación', err);
+        alert('Error al iniciar la generación. Revisa la consola para más detalles.');
+      },
+    });
   }
 }
