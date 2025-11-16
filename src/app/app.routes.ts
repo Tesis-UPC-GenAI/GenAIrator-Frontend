@@ -48,6 +48,11 @@ export const routes: Routes = [
     loadComponent: () => import('./features/results/results.component').then(m => m.ResultsComponent),
     canActivate: [authGuard]
   },
+  {
+    path: 'results/:id',
+    loadComponent: () => import('./features/results/results.component').then(m => m.ResultsComponent),
+    canActivate: [authGuard]
+  },
 
   // Ruta 404
   {
