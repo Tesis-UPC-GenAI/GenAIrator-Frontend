@@ -4,8 +4,17 @@ export interface GenerationRequest {
   generationRequestId?: number;
 
   framework: string;
-  status: 'Pending' | 'Processing' | 'Completed' | 'Failed' | string;
+  lenguaje?: string;
+  estilo?: string;
+  incluirTests?: boolean;
+  incluirDoc?: boolean;
+  estado?: 'Pending' | 'Processing' | 'Completed' | 'Failed' | string;
+  // Backwards-compatible alias some code may expect
+  status?: 'Pending' | 'Processing' | 'Completed' | 'Failed' | string;
+
   resultadoPath?: string;
+  componentesGenerados?: number;
+  lineasDeCodigo?: number;
   fechaCreacion: string; // ISO date string
   fechaActualizacion?: string;
 }
