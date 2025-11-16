@@ -36,12 +36,7 @@
                   }"
                   >{{ p.status }}</span
                 >
-                <a
-                  class="btn btn-primary ml-sm"
-                  [routerLink]="['/results']"
-                  [queryParams]="{ id: p.id }"
-                  >Ver</a
-                >
+                <a class="btn btn-primary ml-sm" [routerLink]="['/results', p.generationRequestId || p.id]">Ver</a>
               </div>
             </div>
           </div>

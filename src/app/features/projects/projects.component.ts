@@ -51,8 +51,14 @@ import { GenerationRequest } from '../../core/models/generation-request.model';
                 Generado: {{ p.fechaCreacion | date : 'short' }}
               </p>
               <div class="flex gap-sm">
-                <a class="btn btn-primary" [routerLink]="['/results']" [queryParams]="{ id: p.id }">Ver</a>
-                <button class="btn btn-secondary" (click)="onDownload(p.id || p.generationRequestId)" [disabled]="p.status !== 'Completed'">Descargar</button>
+                <a class="btn btn-primary" [routerLink]="['/results', p.generationRequestId || p.id]">Ver</a>
+                <button
+                  class="btn btn-secondary"
+                  (click)="onDownload(p.id || p.generationRequestId)"
+                  [disabled]="p.status !== 'Completed'"
+                >
+                  Descargar
+                </button>
               </div>
             </app-card>
           </div>
@@ -91,7 +97,7 @@ export class ProjectsComponent implements OnInit {
       error: (err) => {
         console.error('Error downloading project', err);
         alert('Error al descargar el proyecto. Revisa la consola para más detalles.');
-      }
+      },
     });
   }
 }
