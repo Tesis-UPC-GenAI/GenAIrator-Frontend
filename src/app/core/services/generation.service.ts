@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { GenerationRequest } from '../models/generation-request.model';
 import { AuthService } from './auth.service';
 
@@ -27,7 +28,21 @@ export class GenerationService {
       ? new HttpHeaders({ Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' })
       : new HttpHeaders({ 'Content-Type': 'application/json' });
 
-    return this.http.get<GenerationRequest[]>(`${this.baseUrl}/requests`, { headers });
+    return this.http.get<GenerationRequest[]>(`${this.baseUrl}/requests`, { headers }).pipe(
+      map((list) =>
+        list.map((item) => ({
+          ...item,
+          status: item.status || (item as any).estado,
+          generationRequestId: item.generationRequestId || item.id,
+          // token & metric fields mapping (backend returns camelCase)
+          totalTokens: (item as any).totalTokens ?? (item as any).tokensAplicados,
+          promptTokens: (item as any).promptTokens,
+          completionTokens: (item as any).completionTokens,
+          componentesGenerados: (item as any).componentesGenerados,
+          lineasDeCodigo: (item as any).lineasDeCodigo,
+        }))
+      )
+    );
   }
 
   getAllRequests(): Observable<GenerationRequest[]> {
@@ -36,15 +51,40 @@ export class GenerationService {
       ? new HttpHeaders({ Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' })
       : new HttpHeaders({ 'Content-Type': 'application/json' });
 
-    return this.http.get<GenerationRequest[]>(`${this.baseUrl}/requests/all`, { headers });
+    return this.http.get<GenerationRequest[]>(`${this.baseUrl}/requests/all`, { headers }).pipe(
+      map((list) =>
+        list.map((item) => ({
+          ...item,
+          status: item.status || (item as any).estado,
+          generationRequestId: item.generationRequestId || item.id,
+          totalTokens: (item as any).totalTokens ?? (item as any).tokensAplicados,
+          promptTokens: (item as any).promptTokens,
+          completionTokens: (item as any).completionTokens,
+          componentesGenerados: (item as any).componentesGenerados,
+          lineasDeCodigo: (item as any).lineasDeCodigo,
+        }))
+      )
+    );
   }
 
-  downloadProject(id: number) {
+  downloadProject(id: number): Observable<Blob> {
     const token = this.auth.getToken();
     const headers = token
       ? new HttpHeaders({ Authorization: `Bearer ${token}` })
       : new HttpHeaders();
 
-    return this.http.get(`${this.baseUrl}/${id}/download`, { headers, responseType: 'blob' as 'json' });
+    return this.http.get(`${this.baseUrl}/${id}/download`, {
+      headers,
+      responseType: 'blob' as 'blob',
+    }) as Observable<Blob>;
+  }
+
+  deleteProject(id: number): Observable<any> {
+    const token = this.auth.getToken();
+    const headers = token
+      ? new HttpHeaders({ Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' })
+      : new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    return this.http.delete(`${this.baseUrl}/${id}`, { headers });
   }
 }

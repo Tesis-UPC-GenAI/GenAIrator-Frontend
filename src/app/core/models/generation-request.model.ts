@@ -15,7 +15,9 @@ export interface GenerationRequest {
   resultadoPath?: string;
   componentesGenerados?: number;
   lineasDeCodigo?: number;
-  tokensAplicados?: number;
+  totalTokens?: number;
+  promptTokens?: number;
+  completionTokens?: number;
   fechaCreacion: string; // ISO date string
   fechaActualizacion?: string;
 }

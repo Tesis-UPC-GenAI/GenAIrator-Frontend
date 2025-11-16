@@ -30,7 +30,7 @@ import { GenerationRequest } from '../../core/models/generation-request.model';
                 <span class="stat-label">Líneas de código</span>
               </div>
               <div class="stat-item">
-                <span class="stat-value">{{ request.tokensAplicados || 0 }}</span>
+                <span class="stat-value">{{ request.totalTokens || 0 }}</span>
                 <span class="stat-label">Tokens aplicados</span>
               </div>
             </div>
@@ -54,6 +54,8 @@ import { GenerationRequest } from '../../core/models/generation-request.model';
               <li class="mb-sm">Estilos: {{ request.estilo || 'N/A' }}</li>
               <li class="mb-sm">Incluir tests: {{ request.incluirTests ? 'Sí' : 'No' }}</li>
               <li class="mb-sm">Incluir doc: {{ request.incluirDoc ? 'Sí' : 'No' }}</li>
+              <li class="mb-sm">Tokens de Prompt: {{ request.promptTokens || 0 }}</li>
+              <li class="mb-sm">Tokens de Salida: {{ request.completionTokens || 0 }}</li>
             </ul>
           </app-card>
         </div>
