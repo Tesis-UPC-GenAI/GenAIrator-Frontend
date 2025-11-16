@@ -38,4 +38,13 @@ export class GenerationService {
 
     return this.http.get<GenerationRequest[]>(`${this.baseUrl}/requests/all`, { headers });
   }
+
+  downloadProject(id: number) {
+    const token = this.auth.getToken();
+    const headers = token
+      ? new HttpHeaders({ Authorization: `Bearer ${token}` })
+      : new HttpHeaders();
+
+    return this.http.get(`${this.baseUrl}/${id}/download`, { headers, responseType: 'blob' as 'json' });
+  }
 }
