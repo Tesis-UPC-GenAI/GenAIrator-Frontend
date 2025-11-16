@@ -30,7 +30,7 @@ import { GenerationRequest } from '../../core/models/generation-request.model';
                 <span class="stat-label">Líneas de código</span>
               </div>
               <div class="stat-item">
-                <span class="stat-value">{{ tokensApplied }}</span>
+                <span class="stat-value">{{ request.tokensAplicados || 0 }}</span>
                 <span class="stat-label">Tokens aplicados</span>
               </div>
             </div>
