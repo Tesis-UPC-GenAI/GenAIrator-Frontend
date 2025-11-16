@@ -81,6 +81,42 @@ import { GenerationRequest } from '../../core/models/generation-request.model';
               <li class="mb-sm">Tokens de Salida: {{ request.completionTokens || 0 }}</li>
             </ul>
           </app-card>
+          <app-card
+            class="mt-md"
+            *ngIf="request && (request.estado || request.status) !== 'Failed'"
+          >
+            <h2 class="text-lg font-semibold mb-md">Validación externa</h2>
+            <ul class="text-sm text-secondary" style="list-style: none; padding: 0;">
+              <li class="mb-sm">Sonar Bugs: {{ request.sonarBugs ?? 'N/A' }}</li>
+              <li class="mb-sm">
+                Sonar Vulnerabilities: {{ request.sonarVulnerabilities ?? 'N/A' }}
+              </li>
+              <li class="mb-sm">Sonar Code Smells: {{ request.sonarCodeSmells ?? 'N/A' }}</li>
+              <li class="mb-sm">
+                Lighthouse Performance: {{ request.lighthousePerformanceScore ?? 'N/A' }}
+              </li>
+              <li class="mb-sm">
+                Lighthouse Accessibility: {{ request.lighthouseAccessibilityScore ?? 'N/A' }}
+              </li>
+            </ul>
+          </app-card>
+          <app-card
+            class="mt-md"
+            *ngIf="
+              request &&
+              (request.estado || request.status) !== 'Failed' &&
+              request.generationLogs?.length
+            "
+          >
+            <h2 class="text-lg font-semibold mb-md">Registro de generación</h2>
+            <ul class="text-sm text-secondary" style="list-style: none; padding: 0;">
+              <li *ngFor="let log of request.generationLogs" class="mb-sm">
+                <strong>{{ log.timestamp | date : 'short' }}</strong>
+                <span class="ml-sm text-muted">[{{ log.logLevel || 'Info' }}]</span>
+                <div>{{ log.message }}</div>
+              </li>
+            </ul>
+          </app-card>
         </div>
       </div>
     </div>
@@ -113,9 +149,8 @@ export class ResultsComponent implements OnInit {
   }
 
   loadRequest(id: number) {
-    this.generationService.getAllRequests().subscribe({
-      next: (list) => {
-        const r = list.find((x) => x.generationRequestId === id || x.id === id);
+    this.generationService.getStatus(id).subscribe({
+      next: (r) => {
         if (r) {
           this.request = r;
           this.canDownload = (r.estado || r.status || '').toLowerCase() === 'completed';
@@ -123,7 +158,6 @@ export class ResultsComponent implements OnInit {
           this.componentsCount = r.componentesGenerados ?? 0;
           this.linesOfCode = r.lineasDeCodigo ?? 0;
         } else {
-          // not found - redirect
           this.router.navigate(['/projects']);
         }
       },

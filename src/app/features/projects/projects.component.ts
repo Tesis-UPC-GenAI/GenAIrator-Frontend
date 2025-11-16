@@ -43,7 +43,8 @@ import { GenerationRequest } from '../../core/models/generation-request.model';
                     'badge-warning':
                       p.status === 'Pending' ||
                       p.status === 'Processing' ||
-                      p.estado === 'Pending' || p.estado === 'Processing',
+                      p.estado === 'Pending' ||
+                      p.estado === 'Processing',
                     'badge-success': p.status === 'Completed' || p.estado === 'Completed',
                     'badge-danger': p.status === 'Failed' || p.estado === 'Failed'
                   }"

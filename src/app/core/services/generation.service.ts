@@ -79,6 +79,27 @@ export class GenerationService {
     }) as Observable<Blob>;
   }
 
+  getStatus(id: number): Observable<GenerationRequest> {
+    const token = this.auth.getToken();
+    const headers = token
+      ? new HttpHeaders({ Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' })
+      : new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    return this.http.get<GenerationRequest>(`${this.baseUrl}/status/${id}`, { headers }).pipe(
+      map((item) => ({
+        ...item,
+        status: (item as any).status || (item as any).estado,
+        generationRequestId: (item as any).id || (item as any).generationRequestId,
+        totalTokens: (item as any).totalTokens,
+        promptTokens: (item as any).promptTokens,
+        completionTokens: (item as any).completionTokens,
+        componentesGenerados: (item as any).componentesGenerados,
+        lineasDeCodigo: (item as any).lineasDeCodigo,
+        generationLogs: (item as any).generationLogs || [],
+      }))
+    );
+  }
+
   deleteProject(id: number): Observable<any> {
     const token = this.auth.getToken();
     const headers = token

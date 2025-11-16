@@ -19,6 +19,18 @@ export interface GenerationRequest {
   promptTokens?: number;
   completionTokens?: number;
   errorMessage?: string;
+  sonarBugs?: number;
+  sonarVulnerabilities?: number;
+  sonarCodeSmells?: number;
+  lighthousePerformanceScore?: number;
+  lighthouseAccessibilityScore?: number;
+  generationLogs?: GenerationLog[];
   fechaCreacion: string; // ISO date string
   fechaActualizacion?: string;
+}
+
+export interface GenerationLog {
+  timestamp: string; // ISO date
+  logLevel?: string;
+  message?: string;
 }
