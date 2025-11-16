@@ -30,13 +30,20 @@
                 <span
                   class="badge"
                   [ngClass]="{
-                    'badge-warning': p.status === 'Pending' || p.status === 'Processing',
-                    'badge-success': p.status === 'Completed',
-                    'badge-danger': p.status === 'Failed'
+                    'badge-warning':
+                      p.status === 'Pending' ||
+                      p.status === 'Processing' ||
+                      p.estado === 'Pending' || p.estado === 'Processing',
+                    'badge-success': p.status === 'Completed' || p.estado === 'Completed',
+                    'badge-danger': p.status === 'Failed' || p.estado === 'Failed'
                   }"
-                  >{{ p.status }}</span
+                  >{{ p.status || p.estado }}</span
                 >
-                <a class="btn btn-primary ml-sm" [routerLink]="['/results', p.generationRequestId || p.id]">Ver</a>
+                <a
+                  class="btn btn-primary ml-sm"
+                  [routerLink]="['/results', p.generationRequestId || p.id]"
+                  >Ver</a
+                >
               </div>
             </div>
           </div>

@@ -13,7 +13,27 @@ import { GenerationRequest } from '../../core/models/generation-request.model';
     <div class="page-container">
       <div class="container">
         <div style="max-width: 800px; margin: 0 auto;">
-          <app-card class="text-center" *ngIf="request">
+          <!-- Error view when generation failed -->
+          <app-card
+            class="text-center mb-lg"
+            *ngIf="request && (request.estado || request.status) === 'Failed'"
+          >
+            <div class="error-icon mb-lg"></div>
+            <h2 class="text-2xl font-bold mb-md">Error al generar código</h2>
+            <p class="text-secondary mb-md error-message">
+              {{ request.errorMessage || 'Ocurrió un error inesperado durante la generación.' }}
+            </p>
+            <div class="flex gap-md justify-center">
+              <button class="btn btn-danger" (click)="onDelete()">Eliminar Proyecto</button>
+              <a routerLink="/dashboard" class="btn btn-secondary">Volver al Dashboard</a>
+            </div>
+          </app-card>
+
+          <!-- Normal success/content view -->
+          <app-card
+            class="text-center"
+            *ngIf="request && (request.estado || request.status) !== 'Failed'"
+          >
             <div class="success-icon mb-lg"></div>
             <h1 class="text-3xl font-bold mb-md">Código generado exitosamente!</h1>
             <p class="text-secondary mb-xl">
@@ -47,7 +67,10 @@ import { GenerationRequest } from '../../core/models/generation-request.model';
             </div>
           </app-card>
 
-          <app-card class="mt-lg" *ngIf="request">
+          <app-card
+            class="mt-lg"
+            *ngIf="request && (request.estado || request.status) !== 'Failed'"
+          >
             <h2 class="text-lg font-semibold mb-md">Contenido generado</h2>
             <ul class="text-sm text-secondary" style="list-style: none; padding: 0;">
               <li class="mb-sm">{{ request.framework }} - {{ request.lenguaje || 'N/A' }}</li>

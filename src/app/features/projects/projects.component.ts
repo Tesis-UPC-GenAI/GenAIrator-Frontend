@@ -40,18 +40,25 @@ import { GenerationRequest } from '../../core/models/generation-request.model';
                 <span
                   class="badge"
                   [ngClass]="{
-                    'badge-warning': p.status === 'Pending' || p.status === 'Processing',
-                    'badge-success': p.status === 'Completed',
-                    'badge-danger': p.status === 'Failed'
+                    'badge-warning':
+                      p.status === 'Pending' ||
+                      p.status === 'Processing' ||
+                      p.estado === 'Pending' || p.estado === 'Processing',
+                    'badge-success': p.status === 'Completed' || p.estado === 'Completed',
+                    'badge-danger': p.status === 'Failed' || p.estado === 'Failed'
                   }"
-                  >{{ p.status }}</span
+                  >{{ p.status || p.estado }}</span
                 >
               </div>
               <p class="text-secondary mb-lg text-sm">
                 Generado: {{ p.fechaCreacion | date : 'short' }}
               </p>
               <div class="flex gap-sm">
-                <a class="btn btn-primary" [routerLink]="['/results', p.generationRequestId || p.id]">Ver</a>
+                <a
+                  class="btn btn-primary"
+                  [routerLink]="['/results', p.generationRequestId || p.id]"
+                  >Ver</a
+                >
                 <button
                   class="btn btn-secondary"
                   (click)="onDownload(p.id || p.generationRequestId)"

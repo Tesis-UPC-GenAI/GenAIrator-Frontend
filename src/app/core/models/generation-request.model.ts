@@ -18,6 +18,7 @@ export interface GenerationRequest {
   totalTokens?: number;
   promptTokens?: number;
   completionTokens?: number;
+  errorMessage?: string;
   fechaCreacion: string; // ISO date string
   fechaActualizacion?: string;
 }
