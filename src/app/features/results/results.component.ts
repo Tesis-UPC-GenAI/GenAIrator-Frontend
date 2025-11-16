@@ -22,11 +22,11 @@ import { GenerationRequest } from '../../core/models/generation-request.model';
 
             <div class="grid grid-cols-1 grid-cols-md-3 gap-md mb-xl">
               <div class="stat-item">
-                <span class="stat-value">{{ componentsCount }}</span>
+                <span class="stat-value">{{ request.componentesGenerados || 0 }}</span>
                 <span class="stat-label">Componentes</span>
               </div>
               <div class="stat-item">
-                <span class="stat-value">{{ linesOfCode }}</span>
+                <span class="stat-value">{{ request.lineasDeCodigo || 0 }}</span>
                 <span class="stat-label">Líneas de código</span>
               </div>
               <div class="stat-item">
