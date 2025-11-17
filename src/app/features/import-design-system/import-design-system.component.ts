@@ -59,18 +59,26 @@ import { ToastrService } from 'ngx-toastr';
           <div class="grid grid-cols-1 grid-cols-md-3 gap-md mt-lg">
             <div class="text-center">
               <div class="text-3xl mb-md">1️⃣</div>
-              <h3 class="font-semibold mb-sm">Conecta</h3>
-              <p class="text-sm text-secondary">Conecta tu herramienta de diseño preferida</p>
+              <h3 class="font-semibold mb-sm">Sube tu Diseño</h3>
+              <p class="text-sm text-secondary">
+                Exporta tus "Design Tokens" desde Figma a un archivo
+              </p>
             </div>
             <div class="text-center">
               <div class="text-3xl mb-md">2️⃣</div>
-              <h3 class="font-semibold mb-sm">Importa</h3>
-              <p class="text-sm text-secondary">Selecciona los componentes y tokens a importar</p>
+              <h3 class="font-semibold mb-sm">Configura tu Proyecto</h3>
+              <p class="text-sm text-secondary">
+                Elige tu framework Frontend (Angular, React, Vue) y Estilo (Tailwind, etc.). El
+                Backend se generará automáticamente en <strong>.NET (C#)</strong>.
+              </p>
             </div>
             <div class="text-center">
               <div class="text-3xl mb-md">3️⃣</div>
-              <h3 class="font-semibold mb-sm">Genera</h3>
-              <p class="text-sm text-secondary">Genera código optimizado automáticamente</p>
+              <h3 class="font-semibold mb-sm">Genera y Descarga</h3>
+              <p class="text-sm text-secondary">
+                Nuestro generador (worker) creará tu proyecto fullstack, calculará las métricas y te
+                entregará un archivo <strong>.zip</strong> listo para descargar.
+              </p>
             </div>
           </div>
         </app-card>
