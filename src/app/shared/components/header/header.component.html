@@ -12,43 +12,44 @@
         class="menu-toggle hide-desktop"
         (click)="toggleMenu()"
         [attr.aria-expanded]="isMenuOpen"
-        aria-label="Abrir menú de navegación">
+        aria-label="Abrir menú de navegación"
+      >
         <span class="menu-icon"></span>
       </button>
 
       <!-- Navegación -->
-      <nav
-        class="header-nav"
-        [class.is-open]="isMenuOpen"
-        aria-label="Navegación principal">
-
+      <nav class="header-nav" [class.is-open]="isMenuOpen" aria-label="Navegación principal">
         <div *ngIf="isAuthenticated" class="nav-links">
           <a
             routerLink="/dashboard"
             routerLinkActive="active"
             class="nav-link"
-            (click)="isMenuOpen = false">
+            (click)="isMenuOpen = false"
+          >
             Dashboard
           </a>
           <a
             routerLink="/projects"
             routerLinkActive="active"
             class="nav-link"
-            (click)="isMenuOpen = false">
+            (click)="isMenuOpen = false"
+          >
             Proyectos
           </a>
           <a
             routerLink="/import-design-system"
             routerLinkActive="active"
             class="nav-link"
-            (click)="isMenuOpen = false">
+            (click)="isMenuOpen = false"
+          >
             Importar Design System
           </a>
           <a
             routerLink="/generate"
             routerLinkActive="active"
             class="nav-link"
-            (click)="isMenuOpen = false">
+            (click)="isMenuOpen = false"
+          >
             Generar
           </a>
         </div>
@@ -56,25 +57,26 @@
         <div class="nav-actions">
           <div *ngIf="isAuthenticated && currentUser" class="user-info">
             <span class="user-name">{{ currentUser.name }}</span>
-            <button
-              (click)="logout()"
-              class="btn btn-secondary"
-              aria-label="Cerrar sesión">
+            <button (click)="logout()" class="btn btn-secondary" aria-label="Cerrar sesión">
               Cerrar sesión
             </button>
           </div>
+          <div *ngIf="isAuthenticated" class="nav-links">
+            <a
+              routerLink="/settings"
+              routerLinkActive="active"
+              class="nav-link"
+              (click)="isMenuOpen = false"
+            >
+              Configuración
+            </a>
+          </div>
 
           <div *ngIf="!isAuthenticated" class="auth-links">
-            <a
-              routerLink="/login"
-              class="btn btn-link"
-              (click)="isMenuOpen = false">
+            <a routerLink="/login" class="btn btn-link" (click)="isMenuOpen = false">
               Iniciar sesión
             </a>
-            <a
-              routerLink="/register"
-              class="btn btn-primary"
-              (click)="isMenuOpen = false">
+            <a routerLink="/register" class="btn btn-primary" (click)="isMenuOpen = false">
               Registrarse
             </a>
           </div>

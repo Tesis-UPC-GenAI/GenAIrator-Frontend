@@ -108,4 +108,15 @@ export class GenerationService {
 
     return this.http.delete(`${this.baseUrl}/${id}`, { headers });
   }
+
+  pushToGitHub(id: number): Observable<{ repoUrl: string }> {
+    const token = this.auth.getToken();
+    const headers = token
+      ? new HttpHeaders({ Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' })
+      : new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    return this.http.post<{ repoUrl: string }>(`${this.baseUrl}/${id}/push-to-github`, null, {
+      headers,
+    });
+  }
 }

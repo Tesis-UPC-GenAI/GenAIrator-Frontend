@@ -27,6 +27,7 @@ export interface GenerationRequest {
   generationLogs?: GenerationLog[];
   fechaCreacion: string; // ISO date string
   fechaActualizacion?: string;
+  gitHubRepoUrl?: string | null;
 }
 
 export interface GenerationLog {
