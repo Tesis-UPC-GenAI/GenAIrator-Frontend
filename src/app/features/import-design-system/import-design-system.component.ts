@@ -32,32 +32,6 @@ import { CardComponent } from '../../shared/components/card/card.component';
           </app-card>
 
           <app-card class="feature-card card-interactive">
-            <div class="feature-icon" style="background: linear-gradient(135deg, #FDB300 0%, #FFCD29 100%);">
-              💎
-            </div>
-            <h2 class="text-xl font-semibold mb-md">Sketch</h2>
-            <p class="text-secondary mb-lg">
-              Sincroniza tus diseños de Sketch con tu proyecto de código.
-            </p>
-            <button class="btn btn-primary" disabled>
-              Conectar con Sketch
-            </button>
-          </app-card>
-
-          <app-card class="feature-card card-interactive">
-            <div class="feature-icon" style="background: linear-gradient(135deg, #6B7AFF 0%, #8B99FF 100%);">
-              🖼️
-            </div>
-            <h2 class="text-xl font-semibold mb-md">Adobe XD</h2>
-            <p class="text-secondary mb-lg">
-              Extrae design tokens y componentes de Adobe XD.
-            </p>
-            <button class="btn btn-primary" disabled>
-              Conectar con Adobe XD
-            </button>
-          </app-card>
-
-          <app-card class="feature-card card-interactive">
             <div class="feature-icon" style="background: linear-gradient(135deg, #18B663 0%, #2DD277 100%);">
               📁
             </div>
