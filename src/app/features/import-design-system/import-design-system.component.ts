@@ -40,7 +40,7 @@ import { ToastrService } from 'ngx-toastr';
               📁
             </div>
             <h2 class="text-xl font-semibold mb-md">Subir Archivos</h2>
-            <p class="text-secondary mb-lg">Sube archivos JSON o CSS con tus design tokens.</p>
+            <p class="text-secondary mb-lg">Sube archivos JSON con tus design tokens.</p>
             <input
               #fileInput
               type="file"
@@ -61,7 +61,7 @@ import { ToastrService } from 'ngx-toastr';
               <div class="text-3xl mb-md">1️⃣</div>
               <h3 class="font-semibold mb-sm">Sube tu Diseño</h3>
               <p class="text-sm text-secondary">
-                Exporta tus "Design Tokens" desde Figma a un archivo
+                Exporta tus "Design Tokens" desde Figma a un archivo JSON
               </p>
             </div>
             <div class="text-center">
@@ -76,7 +76,7 @@ import { ToastrService } from 'ngx-toastr';
               <div class="text-3xl mb-md">3️⃣</div>
               <h3 class="font-semibold mb-sm">Genera y Descarga</h3>
               <p class="text-sm text-secondary">
-                Nuestro generador (worker) creará tu proyecto fullstack, calculará las métricas y te
+                Nuestro generador creará tu proyecto fullstack, calculará las métricas y te
                 entregará un archivo <strong>.zip</strong> listo para descargar.
               </p>
             </div>
