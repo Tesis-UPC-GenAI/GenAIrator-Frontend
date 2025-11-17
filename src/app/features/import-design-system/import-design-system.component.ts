@@ -41,8 +41,16 @@ import { ToastrService } from 'ngx-toastr';
             </div>
             <h2 class="text-xl font-semibold mb-md">Subir Archivos</h2>
             <p class="text-secondary mb-lg">Sube archivos JSON o CSS con tus design tokens.</p>
-            <input #fileInput type="file" accept=".json" style="display:none" (change)="onFileSelected($event)" />
-            <button class="btn btn-primary" (click)="fileInput.click()">Seleccionar Archivos</button>
+            <input
+              #fileInput
+              type="file"
+              accept=".json"
+              style="display:none"
+              (change)="onFileSelected($event)"
+            />
+            <button class="btn btn-primary" (click)="fileInput.click()">
+              Seleccionar Archivos
+            </button>
           </app-card>
         </div>
 
