@@ -22,6 +22,15 @@ export class GenerationService {
     return this.http.post<any>(`${this.baseUrl}/start`, data, { headers });
   }
 
+  // New: send FormData for uploads (do not set Content-Type so browser sets boundary)
+  startGenerationForm(formData: FormData): Observable<any> {
+    const token = this.auth.getToken();
+    const headers = token
+      ? new HttpHeaders({ Authorization: `Bearer ${token}` })
+      : new HttpHeaders();
+    return this.http.post<any>(`${this.baseUrl}/start`, formData, { headers });
+  }
+
   getRequests(): Observable<GenerationRequest[]> {
     const token = this.auth.getToken();
     const headers = token

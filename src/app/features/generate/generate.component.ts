@@ -1,9 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { DesignSystemService } from '../../core/services/design-system.service';
+import {
+  ReactiveFormsModule,
+  FormBuilder,
+  FormGroup,
+  FormArray,
+  FormControl,
+  Validators,
+} from '@angular/forms';
+// Removed DesignSystemService and Observable imports as design-system selection was replaced by builderViews
 import { GenerationService } from '../../core/services/generation.service';
 import { Router } from '@angular/router';
 import { CardComponent } from '../../shared/components/card/card.component';
@@ -96,13 +102,32 @@ import { CardComponent } from '../../shared/components/card/card.component';
                 <h2 class="text-xl font-semibold mb-md">📋 Vista Previa</h2>
 
                 <div class="mb-md">
-                  <label class="form-label">Design System</label>
-                  <select class="form-input" formControlName="designSystemId">
-                    <option [ngValue]="null">-- Selecciona un design system --</option>
-                    <option *ngFor="let ds of designSystems$ | async" [value]="ds.dsId">
-                      {{ ds.nombre }}
-                    </option>
-                  </select>
+                  <label class="form-label"
+                    >Subir Código Frontend (ZIP) — puedes subir varios</label
+                  >
+                  <div>
+                    <input type="file" accept=".zip" multiple (change)="onFileSelected($event)" />
+                    <small class="text-secondary"
+                      >Sube uno o varios .zip que contengan tu proyecto frontend (HTML/TS/CSS). Los
+                      archivos se combinarán sin sobrescribir los existentes.</small
+                    >
+                    <div *ngIf="frontendZipFiles.length > 0" style="margin-top:8px">
+                      <strong>Archivos seleccionados:</strong>
+                      <ul>
+                        <li *ngFor="let f of frontendZipFiles">{{ f.name }}</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mb-md">
+                  <label class="form-label">Descripción / Historias de Usuario</label>
+                  <textarea
+                    class="form-input"
+                    formControlName="projectDescription"
+                    rows="6"
+                    placeholder="Ej: Quiero una app de Tareas. Scenario: Crear tarea... (Gherkin soportado)"
+                  ></textarea>
                 </div>
 
                 <div class="mt-sm text-secondary">
@@ -130,11 +155,9 @@ import { CardComponent } from '../../shared/components/card/card.component';
 })
 export class GenerateComponent implements OnInit {
   generationForm: FormGroup;
-  designSystems$!: Observable<any[]>;
 
   constructor(
     private fb: FormBuilder,
-    private designSystemService: DesignSystemService,
     private generationService: GenerationService,
     private router: Router
   ) {
@@ -144,12 +167,10 @@ export class GenerateComponent implements OnInit {
       estilo: ['Tailwind'],
       incluirTests: [false],
       incluirDoc: [false],
-      designSystemId: [null, Validators.required],
+      // Removed builderViews/commandString; file upload handled via onFileSelected
+      projectDescription: ['', Validators.required],
     });
-  }
-
-  ngOnInit(): void {
-    this.designSystems$ = this.designSystemService.getDesignSystems();
+    this.frontendZipFiles = [];
   }
 
   onGenerate(): void {
@@ -158,7 +179,21 @@ export class GenerateComponent implements OnInit {
       return;
     }
 
-    this.generationService.startGeneration(this.generationForm.value).subscribe({
+    // Build FormData to include the uploaded ZIP
+    const form = new FormData();
+    form.append('framework', this.generationForm.get('framework')?.value || '');
+    form.append('lenguaje', this.generationForm.get('lenguaje')?.value || '');
+    form.append('estilo', this.generationForm.get('estilo')?.value || '');
+    form.append('incluirTests', this.generationForm.get('incluirTests')?.value ? 'true' : 'false');
+    form.append('incluirDoc', this.generationForm.get('incluirDoc')?.value ? 'true' : 'false');
+    form.append('projectDescription', this.generationForm.get('projectDescription')?.value || '');
+    // Append all selected zip files using the field name expected by the backend
+    for (let i = 0; i < this.frontendZipFiles.length; i++) {
+      const f = this.frontendZipFiles[i];
+      form.append('frontendZips', f, f.name);
+    }
+
+    this.generationService.startGenerationForm(form).subscribe({
       next: (res) => {
         alert('Generación iniciada');
         this.router.navigate(['/dashboard']);
@@ -168,5 +203,31 @@ export class GenerateComponent implements OnInit {
         alert('Error al iniciar la generación. Revisa la consola para más detalles.');
       },
     });
+  }
+
+  frontendZipFiles: File[] = [];
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.frontendZipFiles = [];
+    if (input.files && input.files.length > 0) {
+      for (let i = 0; i < input.files.length; i++) {
+        const file = input.files.item(i);
+        if (!file) continue;
+        if (file.name.toLowerCase().endsWith('.zip')) {
+          this.frontendZipFiles.push(file);
+        } else {
+          alert('Por favor sube solo archivos .zip');
+          input.value = '';
+          this.frontendZipFiles = [];
+          break;
+        }
+      }
+    }
+  }
+
+  ngOnInit(): void {
+    // Lifecycle hook required by OnInit. Initialization is already done
+    // in the constructor (form and initial view), so no-op for now.
   }
 }

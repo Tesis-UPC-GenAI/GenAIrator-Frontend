@@ -30,6 +30,7 @@ Una aplicación web moderna construida con **Angular 17+** que permite a los usu
 ### ✅ Implementadas
 
 - **🔐 Autenticación Completa**
+
   - Registro de usuarios con validación de contraseña
   - Inicio de sesión con email y contraseña
   - Gestión de sesión con localStorage
@@ -37,6 +38,7 @@ Una aplicación web moderna construida con **Angular 17+** que permite a los usu
   - Cierre de sesión
 
 - **🎨 Sistema de Diseño Moderno**
+
   - Design tokens (CSS Variables)
   - Componentes reutilizables (Card, Button, Input, Header, Footer)
   - Diseño responsive (Mobile First)
@@ -44,12 +46,14 @@ Una aplicación web moderna construida con **Angular 17+** que permite a los usu
   - Accesibilidad WCAG AA
 
 - **📱 Interfaz de Usuario Responsive**
+
   - Grid system adaptativo
   - Breakpoints: 640px, 768px, 1024px
   - Optimizado para móvil, tablet y desktop
   - Animaciones y transiciones suaves
 
 - **📊 Dashboard Interactivo**
+
   - Vista general de proyectos
   - Estadísticas de uso
   - Accesos rápidos a funcionalidades
@@ -77,6 +81,7 @@ Una aplicación web moderna construida con **Angular 17+** que permite a los usu
 ## 🛠️ Tecnologías
 
 ### Core
+
 - **Angular**: 20.3.8 (Standalone Components)
 - **TypeScript**: 5.7.2
 - **RxJS**: 7.8.0
@@ -84,12 +89,15 @@ Una aplicación web moderna construida con **Angular 17+** que permite a los usu
 - **npm**: 11.6.0
 
 ### Herramientas de Desarrollo
+
 - **Angular CLI**: 20.3.8
 - **esbuild**: Builder optimizado
+- **esbuild**: Rendimiento optimizado
 - **TypeScript Strict Mode**: Habilitado
 - **Karma & Jasmine**: Testing framework
 
 ### Estilos
+
 - **CSS Variables** (Custom Properties)
 - **CSS Grid & Flexbox**
 - **Mobile First Approach**
@@ -150,7 +158,7 @@ Actualmente, la aplicación usa un sistema de autenticación mock (sin backend).
 ```typescript
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:3000/api'
+  apiUrl: 'http://localhost:3000/api',
 };
 ```
 
@@ -159,7 +167,7 @@ export const environment = {
 ```typescript
 export const environment = {
   production: true,
-  apiUrl: 'https://api.tudominio.com'
+  apiUrl: 'https://api.tudominio.com',
 };
 ```
 
@@ -196,6 +204,7 @@ ng serve
 ```
 
 La aplicación estará disponible en:
+
 - **URL**: http://localhost:4200
 - **Hot Reload**: Habilitado (cambios en vivo)
 
@@ -262,6 +271,7 @@ La aplicación sigue una **arquitectura modular basada en features** con separac
 ### Capas de la Aplicación
 
 #### 1. **Core Layer** (`src/app/core/`)
+
 Servicios singleton y lógica de negocio central.
 
 - **Services**: Servicios compartidos (AuthService)
@@ -275,7 +285,7 @@ Servicios singleton y lógica de negocio central.
 export class AuthService {
   private currentUserSubject: BehaviorSubject<User | null>;
   public currentUser$: Observable<User | null>;
-  
+
   login(credentials: LoginCredentials): Observable<User>;
   register(data: RegisterData): Observable<User>;
   logout(): void;
@@ -284,6 +294,7 @@ export class AuthService {
 ```
 
 #### 2. **Shared Layer** (`src/app/shared/`)
+
 Componentes y utilidades reutilizables en toda la app.
 
 - **Components**: Card, Button, Input, Header, Footer
@@ -295,15 +306,17 @@ Componentes y utilidades reutilizables en toda la app.
 @Component({
   selector: 'app-card',
   standalone: true,
-  template: `<div class="card"><ng-content></ng-content></div>`
+  template: `<div class="card"><ng-content></ng-content></div>`,
 })
 export class CardComponent {}
 ```
 
 #### 3. **Features Layer** (`src/app/features/`)
+
 Módulos de funcionalidad específica (lazy loaded).
 
 Cada feature tiene su propia estructura:
+
 ```
 feature/
 ├── feature.component.ts
@@ -314,6 +327,7 @@ feature/
 ```
 
 Features implementadas:
+
 - **auth/**: Login y Register
 - **dashboard/**: Panel principal
 - **projects/**: Gestión de proyectos
@@ -391,40 +405,44 @@ genai-app/
 Todos los valores de diseño están centralizados en `src/styles.css`:
 
 #### Colores
+
 ```css
---color-primary: #2563eb;        /* Azul principal */
---color-primary-hover: #1d4ed8;  /* Hover state */
---color-primary-light: #dbeafe;  /* Backgrounds */
---color-secondary: #64748b;      /* Gris secundario */
---color-success: #10b981;        /* Verde éxito */
---color-error: #ef4444;          /* Rojo error */
---color-warning: #f59e0b;        /* Amarillo warning */
+--color-primary: #2563eb; /* Azul principal */
+--color-primary-hover: #1d4ed8; /* Hover state */
+--color-primary-light: #dbeafe; /* Backgrounds */
+--color-secondary: #64748b; /* Gris secundario */
+--color-success: #10b981; /* Verde éxito */
+--color-error: #ef4444; /* Rojo error */
+--color-warning: #f59e0b; /* Amarillo warning */
 ```
 
 #### Espaciado
+
 ```css
---spacing-xs: 0.25rem;   /* 4px */
---spacing-sm: 0.5rem;    /* 8px */
---spacing-md: 1rem;      /* 16px */
---spacing-lg: 1.5rem;    /* 24px */
---spacing-xl: 2rem;      /* 32px */
---spacing-2xl: 3rem;     /* 48px */
---spacing-3xl: 4rem;     /* 64px */
+--spacing-xs: 0.25rem; /* 4px */
+--spacing-sm: 0.5rem; /* 8px */
+--spacing-md: 1rem; /* 16px */
+--spacing-lg: 1.5rem; /* 24px */
+--spacing-xl: 2rem; /* 32px */
+--spacing-2xl: 3rem; /* 48px */
+--spacing-3xl: 4rem; /* 64px */
 ```
 
 #### Tipografía
+
 ```css
---font-size-xs: 0.75rem;    /* 12px */
---font-size-sm: 0.875rem;   /* 14px */
---font-size-base: 1rem;     /* 16px */
---font-size-lg: 1.125rem;   /* 18px */
---font-size-xl: 1.25rem;    /* 20px */
---font-size-2xl: 1.5rem;    /* 24px */
---font-size-3xl: 1.875rem;  /* 30px */
---font-size-4xl: 2.25rem;   /* 36px */
+--font-size-xs: 0.75rem; /* 12px */
+--font-size-sm: 0.875rem; /* 14px */
+--font-size-base: 1rem; /* 16px */
+--font-size-lg: 1.125rem; /* 18px */
+--font-size-xl: 1.25rem; /* 20px */
+--font-size-2xl: 1.5rem; /* 24px */
+--font-size-3xl: 1.875rem; /* 30px */
+--font-size-4xl: 2.25rem; /* 36px */
 ```
 
 #### Bordes y Sombras
+
 ```css
 --radius-sm: 0.25rem;
 --radius-md: 0.5rem;
@@ -440,6 +458,7 @@ Todos los valores de diseño están centralizados en `src/styles.css`:
 ### Componentes Base
 
 #### Card
+
 ```html
 <app-card>
   <h2>Título</h2>
@@ -448,23 +467,21 @@ Todos los valores de diseño están centralizados en `src/styles.css`:
 ```
 
 Variantes disponibles:
+
 - `.card-interactive` - Hover effect
 - `.card-highlight` - Fondo degradado
 - `.feature-card` - Con icono y animación
 
 #### Button
+
 ```html
-<button class="btn btn-primary">Acción</button>
-<button class="btn btn-secondary">Cancelar</button>
+<button class="btn btn-primary">Acción</button> <button class="btn btn-secondary">Cancelar</button>
 ```
 
 #### Input
+
 ```html
-<app-input
-  label="Email"
-  type="email"
-  [formControl]="emailControl"
-  placeholder="tu@email.com">
+<app-input label="Email" type="email" [formControl]="emailControl" placeholder="tu@email.com">
 </app-input>
 ```
 
@@ -480,6 +497,7 @@ Variantes disponibles:
 ```
 
 Breakpoints:
+
 - `grid-cols-sm-*`: ≥640px
 - `grid-cols-md-*`: ≥768px
 - `grid-cols-lg-*`: ≥1024px
@@ -491,6 +509,7 @@ Breakpoints:
 ### 1. Sistema de Autenticación
 
 #### Registro de Usuario
+
 - Formulario con validación reactiva
 - Campos: Nombre, Email, Password, Confirmar Password
 - Validaciones:
@@ -505,11 +524,12 @@ Breakpoints:
 this.authService.register({
   name: 'Juan Pérez',
   email: 'juan@example.com',
-  password: 'password123'
+  password: 'password123',
 });
 ```
 
 #### Inicio de Sesión
+
 - Formulario con email y contraseña
 - Validación de credenciales
 - Gestión de sesión con token
@@ -519,11 +539,12 @@ this.authService.register({
 // Uso del servicio
 this.authService.login({
   email: 'juan@example.com',
-  password: 'password123'
+  password: 'password123',
 });
 ```
 
 #### Protección de Rutas
+
 - Guard implementado con `CanActivateFn`
 - Redirección automática a login si no autenticado
 - Persistencia de sesión con localStorage
@@ -540,6 +561,7 @@ this.authService.login({
 ### 2. Dashboard
 
 **Características:**
+
 - Vista general del usuario logueado
 - Grid responsive de 6 cards:
   1. **Proyectos Recientes**: Acceso rápido a proyectos
@@ -555,6 +577,7 @@ this.authService.login({
 ### 3. Gestión de Proyectos
 
 **Estado actual:** UI/UX completo, pendiente lógica
+
 - Empty state con ilustración
 - Llamados a la acción (CTAs)
 - Estructura preparada para lista de proyectos
@@ -563,12 +586,14 @@ this.authService.login({
 ### 4. Importar Design System
 
 **Integraciones preparadas:**
+
 - **Figma**: Card con branding de Figma
 - **Sketch**: Card con branding de Sketch
 - **Adobe XD**: Card con branding de Adobe XD
 - **Subir Archivos**: Upload de JSON/CSS
 
 **Características:**
+
 - Cards con iconos gradient personalizados
 - Sección "Cómo funciona" (3 pasos)
 - Grid responsive 2x2
@@ -577,6 +602,7 @@ this.authService.login({
 ### 5. Generar Código
 
 **Interfaz preparada:**
+
 - Layout 2 columnas (sidebar + main)
 - **Sidebar de configuración:**
   - Selector de Framework (React, Angular, Vue)
@@ -591,6 +617,7 @@ this.authService.login({
 ### 6. Vista de Procesamiento
 
 **Características:**
+
 - Spinner animado grande
 - Barra de progreso con animación
 - Lista de pasos con estados:
@@ -603,6 +630,7 @@ this.authService.login({
 ### 7. Resultados de Generación
 
 **Características:**
+
 - Icono de éxito grande
 - Estadísticas del código generado:
   - Número de componentes
@@ -617,6 +645,7 @@ this.authService.login({
 ### 8. Página 404
 
 **Características:**
+
 - Código de error grande (8rem)
 - Gradiente en el número
 - Fondo con gradiente sutil
@@ -628,6 +657,7 @@ this.authService.login({
 ## 🗺️ Roadmap
 
 ### Fase 1: Backend Integration (Pendiente)
+
 - [ ] Conectar con API REST
 - [ ] Implementar autenticación JWT
 - [ ] CRUD de proyectos
@@ -635,6 +665,7 @@ this.authService.login({
 - [ ] Upload de archivos
 
 ### Fase 2: Integración con Design Tools (Pendiente)
+
 - [ ] API de Figma
 - [ ] API de Sketch
 - [ ] Parser de Adobe XD
@@ -642,6 +673,7 @@ this.authService.login({
 - [ ] Importación de componentes
 
 ### Fase 3: Generación de Código (Pendiente)
+
 - [ ] Motor de generación
 - [ ] Plantillas de código
 - [ ] Generación React/Angular/Vue
@@ -649,6 +681,7 @@ this.authService.login({
 - [ ] Documentación automática
 
 ### Fase 4: Mejoras de UX (Pendiente)
+
 - [ ] Tema oscuro
 - [ ] Multi-idioma (i18n)
 - [ ] Notificaciones toast
@@ -657,6 +690,7 @@ this.authService.login({
 - [ ] Tutorial interactivo
 
 ### Fase 5: Testing y Optimización (Pendiente)
+
 - [ ] Tests unitarios completos (80%+ coverage)
 - [ ] Tests E2E con Cypress
 - [ ] Optimización de performance

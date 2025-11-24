@@ -1,9 +1,7 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { CardComponent } from '../../shared/components/card/card.component';
-import { DesignSystemService } from '../../core/services/design-system.service';
-import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-import-design-system',
@@ -13,71 +11,38 @@ import { ToastrService } from 'ngx-toastr';
     <div class="page-container">
       <div class="container">
         <div class="dashboard-header">
-          <h1>Importar Design System</h1>
-          <p class="text-secondary mt-sm">Conecta tus herramientas de diseño favoritas</p>
+          <h1>¿Cómo funciona?</h1>
+          <p class="text-secondary mt-sm">
+            Flujo de generación: diseño → descripción → proyecto fullstack
+          </p>
         </div>
 
-        <div class="grid grid-cols-1 grid-cols-md-2">
-          <app-card class="feature-card card-interactive">
-            <div
-              class="feature-icon"
-              style="background: linear-gradient(135deg, #F24E1E 0%, #FF7262 100%);"
-            >
-              🎨
-            </div>
-            <h2 class="text-xl font-semibold mb-md">Figma</h2>
-            <p class="text-secondary mb-lg">
-              Importa componentes, estilos y tokens directamente desde Figma.
-            </p>
-            <button class="btn btn-primary" disabled>Conectar con Figma</button>
-          </app-card>
-
-          <app-card class="feature-card card-interactive">
-            <div
-              class="feature-icon"
-              style="background: linear-gradient(135deg, #18B663 0%, #2DD277 100%);"
-            >
-              📁
-            </div>
-            <h2 class="text-xl font-semibold mb-md">Subir Archivos</h2>
-            <p class="text-secondary mb-lg">Sube archivos JSON con tus design tokens.</p>
-            <input
-              #fileInput
-              type="file"
-              accept=".json"
-              style="display:none"
-              (change)="onFileSelected($event)"
-            />
-            <button class="btn btn-primary" (click)="fileInput.click()">
-              Seleccionar Archivos
-            </button>
-          </app-card>
-        </div>
-
-        <app-card class="mt-xl">
-          <h2 class="text-xl font-semibold mb-md">📚 ¿Cómo funciona?</h2>
+        <app-card class="mt-lg">
           <div class="grid grid-cols-1 grid-cols-md-3 gap-md mt-lg">
             <div class="text-center">
               <div class="text-3xl mb-md">1️⃣</div>
-              <h3 class="font-semibold mb-sm">Sube tu Diseño</h3>
+              <h3 class="font-semibold mb-sm">Diseña y Sube</h3>
               <p class="text-sm text-secondary">
-                Exporta tus "Design Tokens" desde Figma a un archivo JSON
+                Diseña tu interfaz en Figma o tu herramienta preferida y sube el código frontend
+                como un archivo ZIP. El generador usará los archivos subidos como fuente canónica.
               </p>
             </div>
+
             <div class="text-center">
               <div class="text-3xl mb-md">2️⃣</div>
-              <h3 class="font-semibold mb-sm">Configura tu Proyecto</h3>
+              <h3 class="font-semibold mb-sm">Describe y Configura</h3>
               <p class="text-sm text-secondary">
-                Elige tu framework Frontend (Angular, React, Vue) y Estilo (Tailwind, etc.). El
-                Backend se generará automáticamente en <strong>.NET (C#)</strong>.
+                Describe la lógica de negocio en el campo de texto. Puedes subir tu frontend o usar
+                nuestras plantillas para que la IA genere o hidrate componentes.
               </p>
             </div>
+
             <div class="text-center">
               <div class="text-3xl mb-md">3️⃣</div>
-              <h3 class="font-semibold mb-sm">Genera y Descarga</h3>
+              <h3 class="font-semibold mb-sm">Generación Fullstack</h3>
               <p class="text-sm text-secondary">
-                Nuestro generador creará tu proyecto fullstack, calculará las métricas y te
-                entregará un archivo <strong>.zip</strong> listo para descargar.
+                Nuestra IA fusiona el diseño visual con la lógica backend (.NET) y genera tu
+                proyecto completo.
               </p>
             </div>
           </div>
@@ -92,35 +57,5 @@ import { ToastrService } from 'ngx-toastr';
   ],
 })
 export class ImportDesignSystemComponent {
-  constructor(private designSystemService: DesignSystemService, private toastr: ToastrService) {}
-
-  onFileSelected(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (!input.files || input.files.length === 0) {
-      return;
-    }
-    const file = input.files[0];
-    const maxSize = 5 * 1024 * 1024; // 5MB
-
-    // Validate extension
-    if (!/\.json$/i.test(file.name) || file.size > maxSize) {
-      this.toastr.error('Archivo no compatible. Solo .json y max 5MB.');
-      // reset input
-      input.value = '';
-      return;
-    }
-
-    // Call upload
-    this.designSystemService.uploadDesignSystem(file).subscribe({
-      next: (res) => {
-        this.toastr.success('¡Archivo subido correctamente!');
-        input.value = '';
-      },
-      error: (err) => {
-        const msg = err?.error?.error || err?.error?.message || 'Error al subir archivo';
-        this.toastr.error(msg);
-        input.value = '';
-      },
-    });
-  }
+  // This component was repurposed as a help page. No upload logic required.
 }
