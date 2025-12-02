@@ -1,23 +1,14 @@
 <header class="header">
   <div class="container">
     <div class="header-content">
+      <!-- Logo a la izquierda -->
       <div class="header-brand">
         <a routerLink="/" class="brand-link">
-          <span class="brand-text">GenAI Platform</span>
+          <span class="brand-text">GenAIrator</span>
         </a>
       </div>
 
-      <!-- Botón menú móvil -->
-      <button
-        class="menu-toggle hide-desktop"
-        (click)="toggleMenu()"
-        [attr.aria-expanded]="isMenuOpen"
-        aria-label="Abrir menú de navegación"
-      >
-        <span class="menu-icon"></span>
-      </button>
-
-      <!-- Navegación -->
+      <!-- Navegación centrada -->
       <nav class="header-nav" [class.is-open]="isMenuOpen" aria-label="Navegación principal">
         <div *ngIf="isAuthenticated" class="nav-links">
           <a
@@ -52,36 +43,45 @@
           >
             Generar
           </a>
-        </div>
-
-        <div class="nav-actions">
-          <div *ngIf="isAuthenticated && currentUser" class="user-info">
-            <span class="user-name">{{ currentUser.name }}</span>
-            <button (click)="logout()" class="btn btn-secondary" aria-label="Cerrar sesión">
-              Cerrar sesión
-            </button>
-          </div>
-          <div *ngIf="isAuthenticated" class="nav-links">
-            <a
-              routerLink="/settings"
-              routerLinkActive="active"
-              class="nav-link"
-              (click)="isMenuOpen = false"
-            >
-              Configuración
-            </a>
-          </div>
-
-          <div *ngIf="!isAuthenticated" class="auth-links">
-            <a routerLink="/login" class="btn btn-link" (click)="isMenuOpen = false">
-              Iniciar sesión
-            </a>
-            <a routerLink="/register" class="btn btn-primary" (click)="isMenuOpen = false">
-              Registrarse
-            </a>
-          </div>
+                    <a
+            routerLink="/settings"
+            routerLinkActive="active"
+            class="nav-link"
+            (click)="isMenuOpen = false"
+          >
+            Configuración
+          </a>
         </div>
       </nav>
+
+      <!-- Acciones a la derecha -->
+      <div class="header-actions">
+        <div *ngIf="isAuthenticated && currentUser" class="user-info">
+          <span class="user-name">{{ currentUser.name }}</span>
+          <button (click)="logout()" class="btn btn-logout" aria-label="Cerrar sesión">
+            Cerrar sesión
+          </button>
+        </div>
+
+        <div *ngIf="!isAuthenticated" class="auth-links">
+          <a routerLink="/login" class="btn btn-link" (click)="isMenuOpen = false">
+            Iniciar sesión
+          </a>
+          <a routerLink="/register" class="btn btn-primary" (click)="isMenuOpen = false">
+            Registrarse
+          </a>
+        </div>
+
+        <!-- Botón menú móvil -->
+        <button
+          class="menu-toggle hide-desktop"
+          (click)="toggleMenu()"
+          [attr.aria-expanded]="isMenuOpen"
+          aria-label="Abrir menú de navegación"
+        >
+          <span class="menu-icon"></span>
+        </button>
+      </div>
     </div>
   </div>
 </header>

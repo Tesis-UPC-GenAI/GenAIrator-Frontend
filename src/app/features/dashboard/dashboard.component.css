@@ -5,33 +5,97 @@
   margin-left: var(--spacing-sm);
 }
 
+/* Grid con altura uniforme */
+.grid {
+  align-items: stretch;
+}
+
+.grid > app-card {
+  display: flex;
+  height: 100%;
+}
+
 /* Recent projects rows */
 .recent-rows {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--spacing-md);
+  flex: 1;
 }
+
 .recent-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.6rem 0.8rem;
-  border-radius: 6px;
-  background: var(--card-bg, #ffffff);
-  border: 1px solid rgba(0, 0, 0, 0.04);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+  border: 2px solid var(--border-color);
+  transition: all var(--transition-slow);
+  position: relative;
+  overflow: hidden;
 }
+
+.recent-row::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--color-primary-gradient);
+  transform: scaleY(0);
+  transition: transform var(--transition-slow);
+}
+
+.recent-row:hover {
+  transform: translateX(8px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-primary);
+}
+
+.recent-row:hover::before {
+  transform: scaleY(1);
+}
+
 .recent-left {
   display: flex;
   flex-direction: column;
+  gap: var(--spacing-xs);
 }
+
 .project-title {
-  font-weight: 600;
+  font-weight: 700;
+  font-size: var(--font-size-lg);
+  color: var(--text-primary);
+  background: var(--color-primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
+
 .project-sub {
-  font-size: 0.9rem;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
 }
+
 .recent-right {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+}
+
+/* Responsive for recent rows */
+@media (max-width: 640px) {
+  .recent-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+  }
+
+  .recent-right {
+    width: 100%;
+    justify-content: space-between;
+  }
 }

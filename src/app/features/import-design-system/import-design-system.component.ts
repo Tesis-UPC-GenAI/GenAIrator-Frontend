@@ -18,9 +18,9 @@ import { CardComponent } from '../../shared/components/card/card.component';
         </div>
 
         <app-card class="mt-lg">
-          <div class="grid grid-cols-1 grid-cols-md-3 gap-md mt-lg">
-            <div class="text-center">
-              <div class="text-3xl mb-md">1️⃣</div>
+          <div class="steps-grid">
+            <div class="step-item">
+              <div class="step-number">1</div>
               <h3 class="font-semibold mb-sm">Diseña y Sube</h3>
               <p class="text-sm text-secondary">
                 Diseña tu interfaz en Figma o tu herramienta preferida y sube el código frontend
@@ -28,8 +28,8 @@ import { CardComponent } from '../../shared/components/card/card.component';
               </p>
             </div>
 
-            <div class="text-center">
-              <div class="text-3xl mb-md">2️⃣</div>
+            <div class="step-item">
+              <div class="step-number">2</div>
               <h3 class="font-semibold mb-sm">Describe y Configura</h3>
               <p class="text-sm text-secondary">
                 Describe la lógica de negocio en el campo de texto. Puedes subir tu frontend o usar
@@ -37,8 +37,8 @@ import { CardComponent } from '../../shared/components/card/card.component';
               </p>
             </div>
 
-            <div class="text-center">
-              <div class="text-3xl mb-md">3️⃣</div>
+            <div class="step-item">
+              <div class="step-number">3</div>
               <h3 class="font-semibold mb-sm">Generación Fullstack</h3>
               <p class="text-sm text-secondary">
                 Nuestra IA fusiona el diseño visual con la lógica backend (.NET) y genera tu
@@ -52,7 +52,54 @@ import { CardComponent } from '../../shared/components/card/card.component';
   `,
   styles: [
     `
-      /* Estilos específicos si se necesitan */
+      .steps-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: var(--spacing-xl);
+        margin-top: var(--spacing-lg);
+      }
+
+      .step-item {
+        text-align: center;
+        padding: var(--spacing-xl);
+        border-radius: var(--radius-lg);
+        background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+        border: 2px solid var(--border-color);
+        transition: all var(--transition-slow);
+      }
+
+      .step-item:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg);
+        border-color: var(--color-primary-light);
+      }
+
+      .step-number {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 64px;
+        height: 64px;
+        margin-bottom: var(--spacing-md);
+        font-size: var(--font-size-3xl);
+        font-weight: 700;
+        background: var(--color-primary-gradient);
+        color: white;
+        border-radius: var(--radius-full);
+        box-shadow: var(--shadow-colored);
+      }
+
+      @media (min-width: 640px) {
+        .steps-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (min-width: 1024px) {
+        .steps-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
     `,
   ],
 })

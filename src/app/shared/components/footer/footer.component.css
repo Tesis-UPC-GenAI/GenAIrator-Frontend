@@ -1,15 +1,19 @@
 .footer {
-  background-color: var(--bg-primary);
-  border-top: 1px solid var(--border-color);
+  background: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+  border-top: 2px solid transparent;
+  border-image: var(--color-primary-gradient) 1;
   margin-top: auto;
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.04);
 }
 
 .footer-content {
-  padding: var(--spacing-xl) 0;
+  padding: var(--spacing-2xl) 0;
   text-align: center;
 }
 
 .footer-text {
   color: var(--text-secondary);
   font-size: var(--font-size-sm);
+  font-weight: 500;
+  letter-spacing: 0.025em;
 }

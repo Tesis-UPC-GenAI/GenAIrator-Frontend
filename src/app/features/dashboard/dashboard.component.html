@@ -3,7 +3,7 @@
     <div class="dashboard-header">
       <h1>Dashboard</h1>
       <p class="text-secondary mt-sm" *ngIf="currentUser">
-        Bienvenido/a, <strong>{{ currentUser.name }}</strong>
+        Hola de nuevo, <strong>{{ currentUser.name }}</strong>
       </p>
     </div>
 
@@ -70,7 +70,7 @@
         <a routerLink="/generate" class="btn btn-primary"> Comenzar a generar </a>
       </app-card>
 
-      <app-card>
+      <app-card class="card-static">
         <h2 class="text-xl font-semibold mb-lg">Estadísticas</h2>
         <div class="stats">
           <div class="stat-item">
@@ -97,7 +97,7 @@
         </div>
       </app-card>
 
-      <app-card>
+      <app-card class="card-static">
         <h2 class="text-xl font-semibold mb-md">Novedades</h2>
         <p class="text-secondary">
           Mantente al día con las últimas actualizaciones y características de la plataforma.
