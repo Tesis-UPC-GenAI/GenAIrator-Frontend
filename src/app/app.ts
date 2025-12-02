@@ -10,5 +10,5 @@ import { FooterComponent } from './shared/components/footer/footer.component';
   styleUrl: './app.css'
 })
 export class App {
-  title = 'GenAI Platform';
+  title = 'GenAIrator';
 }
