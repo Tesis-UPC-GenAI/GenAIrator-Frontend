@@ -144,7 +144,7 @@ export class RegisterComponent implements OnInit {
         this.router.navigate(['/dashboard']);
       },
       error: (error) => {
-        this.errorMessage = error.message || 'Error al registrar usuario';
+        this.errorMessage = error.error?.message || error.message || 'Error al registrar usuario';
         this.isLoading = false;
       }
     });

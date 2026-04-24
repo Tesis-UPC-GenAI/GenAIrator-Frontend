@@ -1,4 +1,4 @@
-﻿<div class="page-container">
+<div class="page-container">
   <div class="container">
     <div class="dashboard-header">
       <h1>Dashboard</h1>
@@ -8,66 +8,77 @@
     </div>
 
     <div class="grid grid-cols-1 grid-cols-sm-2 grid-cols-lg-3">
-      <app-card class="feature-card">
-        <div class="feature-icon"></div>
-        <h2 class="text-xl font-semibold mb-md">Proyectos Recientes</h2>
-        <p class="text-secondary mb-lg">Tus últimas generaciones aparecerán aquí.</p>
+      <app-card class="feature-card h-full-card">
+        <div class="feature-content">
+          <div class="feature-icon">📂</div>
+          <h2 class="text-xl font-semibold mb-md">Proyectos Recientes</h2>
+          <p class="text-secondary mb-lg">Tus últimas generaciones aparecerán aquí.</p>
 
-        <ng-container *ngIf="proyectosRecientes$ | async as proyectos; else noProjects">
-          <div *ngIf="proyectos.length === 0" class="text-secondary">
-            No hay proyectos recientes.
-          </div>
+          <ng-container *ngIf="proyectosRecientes$ | async as proyectos; else noProjects">
+            <div *ngIf="proyectos.length === 0" class="text-secondary">
+              No hay proyectos recientes.
+            </div>
 
-          <div *ngIf="proyectos.length > 0" class="recent-rows">
-            <div *ngFor="let p of proyectos | slice : 0 : 3" class="recent-row">
-              <div class="recent-left">
-                <div class="project-title">{{ p.framework }} - {{ p.id }}</div>
-                <div class="project-sub text-secondary">
-                  Generado: {{ p.fechaCreacion | date : 'short' }}
+            <div *ngIf="proyectos.length > 0" class="recent-rows">
+              <div *ngFor="let p of proyectos | slice : 0 : 3" class="recent-row">
+                <div class="recent-left">
+                  <div class="project-title">{{ p.framework }} - {{ p.id }}</div>
+                  <div class="project-sub text-secondary">
+                    Generado: {{ p.fechaCreacion | date : 'short' }}
+                  </div>
+                </div>
+                <div class="recent-right">
+                  <span
+                    class="badge"
+                    [ngClass]="{
+                      'badge-warning':
+                        p.status === 'Pending' ||
+                        p.status === 'Processing' ||
+                        p.estado === 'Pending' ||
+                        p.estado === 'Processing',
+                      'badge-success': p.status === 'Completed' || p.estado === 'Completed',
+                      'badge-danger': p.status === 'Failed' || p.estado === 'Failed'
+                    }"
+                    >{{ p.status || p.estado }}</span
+                  >
+                  <a
+                    class="btn btn-primary ml-sm"
+                    [routerLink]="['/results', p.generationRequestId || p.id]"
+                    >Ver</a
+                  >
                 </div>
               </div>
-              <div class="recent-right">
-                <span
-                  class="badge"
-                  [ngClass]="{
-                    'badge-warning':
-                      p.status === 'Pending' ||
-                      p.status === 'Processing' ||
-                      p.estado === 'Pending' ||
-                      p.estado === 'Processing',
-                    'badge-success': p.status === 'Completed' || p.estado === 'Completed',
-                    'badge-danger': p.status === 'Failed' || p.estado === 'Failed'
-                  }"
-                  >{{ p.status || p.estado }}</span
-                >
-                <a
-                  class="btn btn-primary ml-sm"
-                  [routerLink]="['/results', p.generationRequestId || p.id]"
-                  >Ver</a
-                >
-              </div>
             </div>
-          </div>
-
-          <a routerLink="/projects" class="btn btn-primary mt-md">Ver todos los proyectos</a>
-        </ng-container>
-        <ng-template #noProjects>
-          <p class="text-secondary">No hay proyectos recientes.</p>
-        </ng-template>
+          </ng-container>
+          <ng-template #noProjects>
+            <p class="text-secondary">No hay proyectos recientes.</p>
+          </ng-template>
+        </div>
+        <div class="feature-footer">
+          <a routerLink="/projects" class="btn btn-primary w-full">Ver todos los proyectos</a>
+        </div>
       </app-card>
 
-      <app-card class="feature-card">
-        <div class="feature-icon"></div>
-        <h2 class="text-xl font-semibold mb-md">Design Systems</h2>
-        <p class="text-secondary mb-lg">Importa y gestiona tus design systems.</p>
-        <a routerLink="/import-design-system" class="btn btn-primary"> Importar Design System </a>
+      <app-card class="feature-card h-full-card">
+        <div class="feature-content">
+          <div class="feature-icon">🎨</div>
+          <h2 class="text-xl font-semibold mb-md">Design Systems</h2>
+          <p class="text-secondary mb-lg">Importa y gestiona tus design systems de Figma, Sketch y más.</p>
+        </div>
+        <div class="feature-footer">
+          <a routerLink="/import-design-system" class="btn btn-primary w-full"> Importar Design System </a>
+        </div>
       </app-card>
 
-      <app-card class="feature-card">
-        <div class="feature-icon"></div>
-        <h2 class="text-xl font-semibold mb-md">Generar Código</h2>
-        <p class="text-secondary mb-lg">Genera código a partir de tus diseños.</p>
-        <a routerLink="/generate" class="btn btn-primary"> Comenzar a generar </a>
+      <app-card class="feature-card h-full-card">
+        <div class="feature-content">
+          <div class="feature-icon">⚡</div>
+          <h2 class="text-xl font-semibold mb-md">Generar Código</h2>
+          <p class="text-secondary mb-lg">Genera componentes de React o Angular a partir de tus diseños.</p>
+        </div>
+        <div class="feature-footer">
+          <a routerLink="/generate" class="btn btn-primary w-full"> Comenzar a generar </a>
+        </div>
       </app-card>
 
       <app-card class="card-static">

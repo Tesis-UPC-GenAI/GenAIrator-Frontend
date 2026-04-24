@@ -82,7 +82,7 @@ export class LoginComponent implements OnInit {
         this.router.navigate(['/dashboard']);
       },
       error: (error) => {
-        this.errorMessage = error.message || 'Error al iniciar sesión';
+        this.errorMessage = error.error?.message || error.message || 'Error al iniciar sesión';
         this.isLoading = false;
       }
     });
