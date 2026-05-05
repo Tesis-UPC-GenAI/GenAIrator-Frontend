@@ -101,7 +101,7 @@ export class AuthService {
             email: usuario.email ?? '',
           };
           return { user, token: res.token } as AuthResponse;
-        })
+        }),
       );
   }
 
@@ -141,7 +141,7 @@ export class AuthService {
           email: usuario.email ?? '',
         };
         return { user, token: res.token } as AuthResponse;
-      })
+      }),
     );
   }
 

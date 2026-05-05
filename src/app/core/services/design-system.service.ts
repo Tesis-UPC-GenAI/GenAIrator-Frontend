@@ -17,7 +17,10 @@ export class DesignSystemService {
 
   private baseUrl = `${this.getBaseApi()}/api/designsystem`;
 
-  constructor(private http: HttpClient, private auth: AuthService) {}
+  constructor(
+    private http: HttpClient,
+    private auth: AuthService,
+  ) {}
 
   getDesignSystems(): Observable<any[]> {
     const token = this.auth.getToken();

@@ -19,7 +19,10 @@ export class GenerationService {
 
   private baseUrl = `${this.getBaseApi()}/api/generation`;
 
-  constructor(private http: HttpClient, private auth: AuthService) {}
+  constructor(
+    private http: HttpClient,
+    private auth: AuthService,
+  ) {}
 
   startGeneration(data: any): Observable<any> {
     const token = this.auth.getToken();
@@ -57,8 +60,8 @@ export class GenerationService {
           completionTokens: (item as any).completionTokens,
           componentesGenerados: (item as any).componentesGenerados,
           lineasDeCodigo: (item as any).lineasDeCodigo,
-        }))
-      )
+        })),
+      ),
     );
   }
 
@@ -79,8 +82,8 @@ export class GenerationService {
           completionTokens: (item as any).completionTokens,
           componentesGenerados: (item as any).componentesGenerados,
           lineasDeCodigo: (item as any).lineasDeCodigo,
-        }))
-      )
+        })),
+      ),
     );
   }
 
@@ -113,7 +116,7 @@ export class GenerationService {
         componentesGenerados: (item as any).componentesGenerados,
         lineasDeCodigo: (item as any).lineasDeCodigo,
         generationLogs: (item as any).generationLogs || [],
-      }))
+      })),
     );
   }
 

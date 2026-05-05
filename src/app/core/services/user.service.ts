@@ -20,7 +20,10 @@ export class UserService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor(private http: HttpClient, private auth: AuthService) {}
+  constructor(
+    private http: HttpClient,
+    private auth: AuthService,
+  ) {}
 
   savePat(gitHubPat: string | null): Observable<any> {
     const token = this.auth.getToken();
@@ -32,7 +35,7 @@ export class UserService {
       tap(() => {
         // refresh current user after saving PAT to update subscribers
         this.getMe().subscribe({ next: (u) => this.setCurrentUserFromApi(u), error: () => {} });
-      })
+      }),
     );
   }
 
@@ -45,7 +48,7 @@ export class UserService {
     return this.http.get(`${this.baseUrl}/me`, { headers }).pipe(
       tap((u: any) => {
         this.setCurrentUserFromApi(u);
-      })
+      }),
     );
   }
 
