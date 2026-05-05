@@ -8,7 +8,15 @@ import { User } from '../models/user.model';
   providedIn: 'root',
 })
 export class UserService {
-  private baseUrl = 'http://localhost:5000/api/user';
+  private getBaseApi(): string {
+    try {
+      const win = window as any;
+      if (win && win.API_BASE_URL) return win.API_BASE_URL;
+    } catch {}
+    return 'https://genairator-backend.onrender.com';
+  }
+
+  private baseUrl = `${this.getBaseApi()}/api/user`;
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 

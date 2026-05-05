@@ -7,7 +7,15 @@ import { AuthService } from './auth.service';
   providedIn: 'root',
 })
 export class DesignSystemService {
-  private baseUrl = 'http://localhost:5000/api/designsystem';
+  private getBaseApi(): string {
+    try {
+      const win = window as any;
+      if (win && win.API_BASE_URL) return win.API_BASE_URL;
+    } catch {}
+    return 'https://genairator-backend.onrender.com';
+  }
+
+  private baseUrl = `${this.getBaseApi()}/api/designsystem`;
 
   constructor(private http: HttpClient, private auth: AuthService) {}
 

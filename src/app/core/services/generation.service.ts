@@ -9,7 +9,15 @@ import { AuthService } from './auth.service';
   providedIn: 'root',
 })
 export class GenerationService {
-  private baseUrl = 'http://localhost:5000/api/generation';
+  private getBaseApi(): string {
+    try {
+      const win = window as any;
+      if (win && win.API_BASE_URL) return win.API_BASE_URL;
+    } catch {}
+    return 'https://genairator-backend.onrender.com';
+  }
+
+  private baseUrl = `${this.getBaseApi()}/api/generation`;
 
   constructor(private http: HttpClient, private auth: AuthService) {}
 
