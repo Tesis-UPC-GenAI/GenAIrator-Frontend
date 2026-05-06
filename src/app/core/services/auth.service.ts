@@ -77,7 +77,7 @@ export class AuthService {
     const payload = {
       nombre: data.name,
       email: data.email,
-      contraseña: data.password,
+      contrasena: data.password,
     };
 
     return this.http
@@ -119,7 +119,7 @@ export class AuthService {
 
     const payload = {
       email: credentials.email,
-      contraseña: credentials.password,
+      contrasena: credentials.password,
     };
 
     return this.http.post<{ token: string; usuario: any }>(`${this.baseUrl}/login`, payload).pipe(
