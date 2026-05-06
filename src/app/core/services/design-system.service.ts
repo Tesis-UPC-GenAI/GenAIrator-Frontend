@@ -2,20 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DesignSystemService {
-  private getBaseApi(): string {
-    try {
-      const win = window as any;
-      if (win && win.API_BASE_URL) return win.API_BASE_URL;
-    } catch {}
-    return 'https://genairator-backend.onrender.com';
-  }
-
-  private baseUrl = `${this.getBaseApi()}/api/designsystem`;
+  private baseUrl = `${environment.apiBaseUrl}/api/designsystem`;
 
   constructor(
     private http: HttpClient,
