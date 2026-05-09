@@ -4,20 +4,13 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { GenerationRequest } from '../models/generation-request.model';
 import { AuthService } from './auth.service';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GenerationService {
-  private getBaseApi(): string {
-    try {
-      const win = window as any;
-      if (win && win.API_BASE_URL) return win.API_BASE_URL;
-    } catch {}
-    return 'https://genairator-backend.onrender.com';
-  }
-
-  private baseUrl = `${this.getBaseApi()}/api/generation`;
+  private baseUrl = `${environment.apiBaseUrl}/api/generation`;
 
   constructor(
     private http: HttpClient,

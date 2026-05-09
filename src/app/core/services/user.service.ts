@@ -3,20 +3,13 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { AuthService } from './auth.service';
 import { User } from '../models/user.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  private getBaseApi(): string {
-    try {
-      const win = window as any;
-      if (win && win.API_BASE_URL) return win.API_BASE_URL;
-    } catch {}
-    return 'https://genairator-backend.onrender.com';
-  }
-
-  private baseUrl = `${this.getBaseApi()}/api/user`;
+  private baseUrl = `${environment.apiBaseUrl}/api/user`;
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 

@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { tap, map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { User, LoginCredentials, RegisterData, AuthResponse } from '../models/user.model';
+import { environment } from '../../../environments/environment';
 
 /**
  * Servicio de autenticación que llama al backend .NET Core
@@ -18,17 +19,7 @@ export class AuthService {
   private currentUserSubject = new BehaviorSubject<User | null>(this.getUserFromStorage());
   public currentUser$ = this.currentUserSubject.asObservable();
 
-  // Base URL del backend. Se puede sobrescribir en tiempo de despliegue con
-  // `window.API_BASE_URL` (por ejemplo: https://genairator-backend.onrender.com)
-  private getBaseApi(): string {
-    try {
-      const win = window as any;
-      if (win && win.API_BASE_URL) return win.API_BASE_URL;
-    } catch {}
-    return 'https://genairator-backend.onrender.com';
-  }
-
-  private baseUrl = `${this.getBaseApi()}/api/auth`;
+  private baseUrl = `${environment.apiBaseUrl}/api/auth`;
 
   constructor(private http: HttpClient) {}
 
