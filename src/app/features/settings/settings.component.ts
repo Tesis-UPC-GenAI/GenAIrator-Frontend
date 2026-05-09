@@ -13,7 +13,7 @@ import { ToastrService } from 'ngx-toastr';
     <div class="page-container">
       <div class="container settings-container">
         <div class="settings-header">
-          <h1 class="text-3xl font-bold text-gradient">Configuración</h1>
+          <h1 class="text-3xl font-bold">Configuración</h1>
           <p class="text-secondary mt-md">
             Gestiona tus preferencias y configuración de la plataforma
           </p>

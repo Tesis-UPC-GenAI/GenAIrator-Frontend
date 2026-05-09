@@ -10,395 +10,246 @@ import {
   Validators,
 } from '@angular/forms';
 
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { GenerationService } from '../../core/services/generation.service';
 import { Router } from '@angular/router';
-import { CardComponent } from '../../shared/components/card/card.component';
 
 @Component({
   selector: 'app-generate',
   standalone: true,
-  imports: [CommonModule, RouterModule, CardComponent, ReactiveFormsModule],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule],
+  styleUrls: ['./generate.component.css'],
   template: `
-    <div class="page-container">
-      <div class="container">
-        <div class="dashboard-header">
+    <div class="generate-page">
+      <div class="generate-container">
+        <div class="generate-header">
           <h1>Generar Código</h1>
-          <p class="text-secondary mt-sm">Configura y genera código optimizado para tu proyecto</p>
+          <p>Configura y genera código optimizado para tu proyecto</p>
         </div>
 
         <form [formGroup]="generationForm" (ngSubmit)="onGenerate()">
           <div class="generate-grid">
             <!-- Sidebar de configuración -->
             <div class="config-sidebar">
-              <app-card>
-                <div class="config-header">
-                  <svg class="config-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-                    ></path>
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                    ></path>
+              <div class="sidebar-card">
+                <div class="sidebar-header">
+                  <svg class="sidebar-header-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
                   </svg>
-                  <h2 class="config-title">Configuración</h2>
+                  <h2>Configuración</h2>
                 </div>
 
+                <!-- FRONTEND SECTION -->
                 <div class="config-section">
-                  <div class="section-header">
-                    <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                      ></path>
+                  <div class="section-label">
+                    <svg class="section-icon-small" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                      <line x1="8" y1="21" x2="16" y2="21"></line>
+                      <line x1="12" y1="17" x2="12" y2="21"></line>
                     </svg>
-                    <h3 class="section-title">Frontend</h3>
+                    FRONTEND
                   </div>
 
-                  <div class="form-group">
-                    <label class="form-label">
-                      <span class="label-text">Framework</span>
-                      <span class="label-required">*</span>
-                    </label>
-                    <div class="select-wrapper custom-select" (click)="toggleFrameworkOpen()">
-                      <div class="form-select custom-select-trigger">
-                        {{ generationForm.get('framework')?.value || 'Selecciona framework' }}
-                        <svg
-                          class="select-icon"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                          [class.rotated]="isFrameworkOpen"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M19 9l-7 7-7-7"
-                          ></path>
-                        </svg>
+                  <div class="select-field">
+                    <label>Framework</label>
+                    <div class="custom-dropdown" (click)="toggleFrameworkOpen()">
+                      <div class="dropdown-trigger">
+                        <div class="trigger-content">
+                          <div class="brand-icon" [innerHTML]="getBrandIcon(generationForm.get('framework')?.value)"></div>
+                          {{ generationForm.get('framework')?.value }}
+                        </div>
+                        <svg class="chevron-icon" [class.rotated]="isFrameworkOpen" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                       </div>
-
-                      <ul *ngIf="isFrameworkOpen" class="custom-select-menu">
-                        <li
-                          *ngFor="let fw of frameworks"
-                          (click)="selectFramework(fw); $event.stopPropagation()"
-                          class="custom-select-option"
-                          [class.is-selected]="generationForm.get('framework')?.value === fw"
-                        >
+                      <div class="dropdown-menu" *ngIf="isFrameworkOpen">
+                        <div *ngFor="let fw of frameworks" (click)="selectFramework(fw); $event.stopPropagation()" class="dropdown-option" [class.selected]="generationForm.get('framework')?.value === fw">
+                          <div class="brand-icon" [innerHTML]="getBrandIcon(fw)"></div>
                           {{ fw }}
-                        </li>
-                      </ul>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
-                  <div class="form-group">
-                    <label class="form-label">
-                      <span class="label-text">Lenguaje</span>
-                      <span class="label-required">*</span>
-                    </label>
-                    <div class="select-wrapper custom-select" (click)="toggleLenguajeOpen()">
-                      <div class="form-select custom-select-trigger">
-                        {{ generationForm.get('lenguaje')?.value || 'Selecciona lenguaje' }}
-                        <svg
-                          class="select-icon"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                          [class.rotated]="isLenguajeOpen"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M19 9l-7 7-7-7"
-                          ></path>
-                        </svg>
+                  <div class="select-field">
+                    <label>Lenguaje</label>
+                    <div class="custom-dropdown" (click)="toggleLenguajeOpen()">
+                      <div class="dropdown-trigger">
+                        <div class="trigger-content">
+                          <div class="brand-icon" [innerHTML]="getBrandIcon(generationForm.get('lenguaje')?.value)"></div>
+                          {{ generationForm.get('lenguaje')?.value }}
+                        </div>
+                        <svg class="chevron-icon" [class.rotated]="isLenguajeOpen" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                       </div>
-
-                      <ul *ngIf="isLenguajeOpen" class="custom-select-menu">
-                        <li
-                          *ngFor="let lng of lenguajes"
-                          (click)="selectLenguaje(lng); $event.stopPropagation()"
-                          class="custom-select-option"
-                          [class.is-selected]="generationForm.get('lenguaje')?.value === lng"
-                        >
+                      <div class="dropdown-menu" *ngIf="isLenguajeOpen">
+                        <div *ngFor="let lng of lenguajes" (click)="selectLenguaje(lng); $event.stopPropagation()" class="dropdown-option" [class.selected]="generationForm.get('lenguaje')?.value === lng">
+                          <div class="brand-icon" [innerHTML]="getBrandIcon(lng)"></div>
                           {{ lng }}
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label class="form-label">
-                      <span class="label-text">Estilo</span>
-                      <span class="label-required">*</span>
-                    </label>
-                    <div class="select-wrapper custom-select" (click)="toggleEstiloOpen()">
-                      <div class="form-select custom-select-trigger">
-                        {{ generationForm.get('estilo')?.value || 'Selecciona estilo' }}
-                        <svg
-                          class="select-icon"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                          [class.rotated]="isEstiloOpen"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M19 9l-7 7-7-7"
-                          ></path>
-                        </svg>
+                        </div>
                       </div>
+                    </div>
+                  </div>
 
-                      <ul *ngIf="isEstiloOpen" class="custom-select-menu">
-                        <li
-                          *ngFor="let est of estilos"
-                          (click)="selectEstilo(est); $event.stopPropagation()"
-                          class="custom-select-option"
-                          [class.is-selected]="generationForm.get('estilo')?.value === est"
-                        >
+                  <div class="select-field">
+                    <label>Estilo</label>
+                    <div class="custom-dropdown" (click)="toggleEstiloOpen()">
+                      <div class="dropdown-trigger">
+                        <div class="trigger-content">
+                          <div class="brand-icon" [innerHTML]="getBrandIcon(generationForm.get('estilo')?.value)"></div>
+                          {{ generationForm.get('estilo')?.value }}
+                        </div>
+                        <svg class="chevron-icon" [class.rotated]="isEstiloOpen" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                      </div>
+                      <div class="dropdown-menu" *ngIf="isEstiloOpen">
+                        <div *ngFor="let est of estilos" (click)="selectEstilo(est); $event.stopPropagation()" class="dropdown-option" [class.selected]="generationForm.get('estilo')?.value === est">
+                          <div class="brand-icon" [innerHTML]="getBrandIcon(est)"></div>
                           {{ est }}
-                        </li>
-                      </ul>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
 
+                <!-- BACKEND SECTION -->
                 <div class="config-section">
-                  <div class="section-header">
-                    <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"
-                      ></path>
+                  <div class="section-label">
+                    <svg class="section-icon-small" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                      <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                      <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
                     </svg>
-                    <h3 class="section-title">Backend</h3>
+                    BACKEND
                   </div>
 
-                  <div class="form-group">
-                    <label class="form-label">
-                      <span class="label-text">Tecnología</span>
-                      <span class="label-badge">Estándar</span>
+                  <div class="select-field">
+                    <label>Tecnología</label>
+                    <div class="tech-box">
+                      <div class="tech-info">
+                        <div class="brand-icon" [innerHTML]="getBrandIcon('.NET (C#)')"></div>
+                        .NET (C#)
+                      </div>
+                      <span class="badge-standard">ESTÁNDAR</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ADDITIONAL OPTIONS -->
+                <div class="config-section">
+                  <div class="section-label">
+                    <svg class="section-icon-small" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="4" y1="21" x2="4" y2="14"></line>
+                      <line x1="4" y1="10" x2="4" y2="3"></line>
+                      <line x1="12" y1="21" x2="12" y2="12"></line>
+                      <line x1="12" y1="8" x2="12" y2="3"></line>
+                      <line x1="20" y1="21" x2="20" y2="16"></line>
+                      <line x1="20" y1="12" x2="20" y2="3"></line>
+                      <line x1="1" y1="14" x2="7" y2="14"></line>
+                      <line x1="9" y1="8" x2="15" y2="8"></line>
+                      <line x1="17" y1="16" x2="23" y2="16"></line>
+                    </svg>
+                    OPCIONES ADICIONALES
+                  </div>
+
+                  <div class="options-grid">
+                    <label class="option-card" (click)="$event.stopPropagation()">
+                      <input type="checkbox" formControlName="incluirTests">
+                      <div class="option-info">
+                        <span class="option-title">Incluir Tests</span>
+                        <span class="option-desc">Genera pruebas unitarias automáticas</span>
+                      </div>
                     </label>
-                    <div class="input-disabled">
-                      <svg
-                        class="input-disabled-icon"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                        ></path>
-                      </svg>
-                      <span>.NET (C#)</span>
-                    </div>
+
+                    <label class="option-card" (click)="$event.stopPropagation()">
+                      <input type="checkbox" formControlName="incluirDoc">
+                      <div class="option-info">
+                        <span class="option-title">Incluir Documentación</span>
+                        <span class="option-desc">Genera documentación del código</span>
+                      </div>
+                    </label>
                   </div>
                 </div>
-
-                <div class="config-section">
-                  <div class="section-header">
-                    <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
-                      ></path>
-                    </svg>
-                    <h3 class="section-title">Opciones Adicionales</h3>
-                  </div>
-
-                  <label class="checkbox-label">
-                    <input type="checkbox" formControlName="incluirTests" class="checkbox-input" />
-                    <span class="checkbox-custom"></span>
-                    <span class="checkbox-text">
-                      <span class="checkbox-title">Incluir Tests</span>
-                      <span class="checkbox-description">Genera pruebas unitarias automáticas</span>
-                    </span>
-                  </label>
-
-                  <label class="checkbox-label">
-                    <input type="checkbox" formControlName="incluirDoc" class="checkbox-input" />
-                    <span class="checkbox-custom"></span>
-                    <span class="checkbox-text">
-                      <span class="checkbox-title">Incluir Documentación</span>
-                      <span class="checkbox-description">Genera documentación del código</span>
-                    </span>
-                  </label>
-                </div>
-              </app-card>
+              </div>
             </div>
 
+            <!-- Area Principal -->
             <div class="main-area">
-              <app-card>
-                <div class="preview-header">
-                  <svg class="preview-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                    ></path>
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                    ></path>
-                  </svg>
-                  <h2 class="preview-title">Vista Previa del Proyecto</h2>
-                </div>
-
-                <div class="upload-section">
-                  <label class="form-label">
-                    <span class="label-text">Código Frontend</span>
-                    <span class="label-badge-info">Archivos ZIP</span>
-                  </label>
-
-                  <div class="file-upload-wrapper">
-                    <input
-                      type="file"
-                      id="fileInput"
-                      accept=".zip"
-                      multiple
-                      (change)="onFileSelected($event)"
-                      class="file-input-hidden"
-                    />
-                    <label for="fileInput" class="file-upload-area">
-                      <svg
-                        class="upload-icon"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                        ></path>
-                      </svg>
-                      <div class="upload-text">
-                        <p class="upload-title">Arrastra archivos o haz clic para seleccionar</p>
-                        <p class="upload-subtitle">
-                          Sube uno o varios archivos .zip con tu proyecto frontend
-                        </p>
-                      </div>
-                    </label>
-
-                    <div *ngIf="frontendZipFiles.length > 0" class="files-list">
-                      <div class="files-header">
-                        <svg
-                          class="files-icon"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                          ></path>
-                        </svg>
-                        <span class="files-count"
-                          >{{ frontendZipFiles.length }} archivo(s) seleccionado(s)</span
-                        >
-                      </div>
-                      <div class="file-item" *ngFor="let f of frontendZipFiles">
-                        <svg
-                          class="file-icon"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
-                          ></path>
-                        </svg>
-                        <span class="file-name">{{ f.name }}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="description-section">
-                  <label class="form-label">
-                    <span class="label-text">Descripción del Proyecto</span>
-                    <span class="label-required">*</span>
-                  </label>
-                  <div class="textarea-wrapper">
-                    <textarea
-                      class="form-textarea"
-                      formControlName="projectDescription"
-                      rows="8"
-                      placeholder="Describe tu proyecto en detalle. Puedes usar formato Gherkin para historias de usuario...&#10;&#10;Ejemplo:&#10;Feature: Gestión de Tareas&#10;  Scenario: Crear una nueva tarea&#10;    Given que estoy en la página principal&#10;    When hago clic en 'Nueva Tarea'&#10;    Then debo ver el formulario de creación"
-                    ></textarea>
-                    <div class="textarea-footer">
-                      <svg
-                        class="textarea-icon"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                        ></path>
-                      </svg>
-                      <span class="textarea-hint"
-                        >Formato Gherkin soportado para especificaciones detalladas</span
-                      >
-                    </div>
-                  </div>
-                </div>
-
-                <div class="actions-bar">
-                  <a routerLink="/dashboard" class="btn btn-secondary">
-                    <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M6 18L18 6M6 6l12 12"
-                      ></path>
+              <div class="main-card">
+                <div class="main-header">
+                  <div class="main-header-title">
+                    <svg class="header-icon-blue" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
                     </svg>
+                    <h2>Vista previa del proyecto</h2>
+                  </div>
+                  <div class="header-badges">
+                    <div class="capsule-badge">
+                      <div class="brand-icon" [innerHTML]="getBrandIcon(generationForm.get('framework')?.value)"></div>
+                      {{ generationForm.get('framework')?.value }}
+                    </div>
+                    <div class="capsule-badge">
+                      <div class="brand-icon" [innerHTML]="getBrandIcon(generationForm.get('lenguaje')?.value)"></div>
+                      {{ generationForm.get('lenguaje')?.value }}
+                    </div>
+                    <div class="capsule-badge">
+                      <div class="brand-icon" [innerHTML]="getBrandIcon(generationForm.get('estilo')?.value)"></div>
+                      {{ generationForm.get('estilo')?.value }}
+                    </div>
+                    <div class="capsule-badge">
+                      <div class="brand-icon" [innerHTML]="getBrandIcon('.NET (C#)')"></div>
+                      .NET (C#)
+                    </div>
+                  </div>
+                </div>
+
+                <div class="content-section">
+                  <div class="content-label-row">
+                    <span class="content-label">Código Frontend</span>
+                    <span class="badge-blue">ARCHIVOS ZIP</span>
+                  </div>
+                  
+                  <input type="file" id="fileInput" accept=".zip" multiple (change)="onFileSelected($event)" style="display: none;">
+                  <label for="fileInput" class="upload-area">
+                    <svg class="upload-icon-large" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="17 8 12 3 7 8"></polyline>
+                      <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    <div class="upload-title">Arrastra archivos o haz clic para seleccionar</div>
+                    <div class="upload-desc">Sube uno o varios archivos .zip con tu proyecto frontend</div>
+                  </label>
+
+                  <div *ngIf="frontendZipFiles.length > 0" class="files-preview">
+                    <div class="file-row" *ngFor="let f of frontendZipFiles">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                      {{ f.name }}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="content-section">
+                  <div class="content-label-row">
+                    <span class="content-label">Descripción del Proyecto <span class="required-star">*</span></span>
+                  </div>
+                  <div class="textarea-container">
+                    <textarea class="custom-textarea" formControlName="projectDescription" rows="10" placeholder="Describe tu proyecto en detalle. Puedes usar formato Gherkin para historias de usuario..."></textarea>
+                    <div class="hint-row">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                      Formato Gherkin soportado para especificaciones detalladas
+                    </div>
+                  </div>
+                </div>
+
+                <div class="actions-footer">
+                  <button type="button" routerLink="/dashboard" class="btn-outline">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                     Cancelar
-                  </a>
-                  <button type="submit" class="btn btn-primary">
-                    <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M13 10V3L4 14h7v7l9-11h-7z"
-                      ></path>
-                    </svg>
+                  </button>
+                  <button type="submit" class="btn-generate">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
                     Generar Código
                   </button>
                 </div>
-              </app-card>
+              </div>
             </div>
           </div>
         </form>
@@ -410,9 +261,9 @@ export class GenerateComponent implements OnInit {
   generationForm: FormGroup;
   frontendZipFiles: File[] = [];
 
-  frameworks = ['React', 'Angular', 'Vue'];
+  frameworks = ['Angular', 'React', 'Vue'];
   lenguajes = ['TypeScript', 'JavaScript'];
-  estilos = ['CSS Modules', 'Styled Components', 'Tailwind'];
+  estilos = ['Tailwind', 'CSS Modules', 'Styled Components'];
 
   isFrameworkOpen = false;
   isLenguajeOpen = false;
@@ -422,6 +273,7 @@ export class GenerateComponent implements OnInit {
     private fb: FormBuilder,
     private generationService: GenerationService,
     private router: Router,
+    private sanitizer: DomSanitizer
   ) {
     this.generationForm = this.fb.group({
       framework: ['Angular'],
@@ -429,9 +281,50 @@ export class GenerateComponent implements OnInit {
       estilo: ['Tailwind'],
       incluirTests: [false],
       incluirDoc: [false],
-      projectDescription: ['', Validators.required],
+      projectDescription: [
+        '',
+        Validators.required,
+      ],
     });
-    this.frontendZipFiles = [];
+  }
+
+  getBrandIcon(name: string | undefined): SafeHtml {
+    if (!name) return '';
+    let iconUrl = '';
+    switch (name) {
+      case 'Angular':
+        iconUrl = 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/angularjs/angularjs-original.svg';
+        break;
+      case 'React':
+        iconUrl = 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg';
+        break;
+      case 'Vue':
+        iconUrl = 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg';
+        break;
+      case 'TypeScript':
+        iconUrl = 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg';
+        break;
+      case 'JavaScript':
+        iconUrl = 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg';
+        break;
+      case 'Tailwind':
+        iconUrl = 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg';
+        break;
+      case 'CSS Modules':
+        iconUrl = 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg';
+        break;
+      case 'Styled Components':
+        iconUrl = 'https://styled-components.com/logo.png';
+        break;
+      case '.NET (C#)':
+        iconUrl = 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/dot-net/dot-net-original.svg';
+        break;
+      default:
+        iconUrl = '';
+    }
+    return this.sanitizer.bypassSecurityTrustHtml(
+      `<img src="${iconUrl}" alt="${name}" style="width: 20px; height: 20px; object-fit: contain;">`
+    );
   }
 
   toggleFrameworkOpen(): void {
@@ -499,7 +392,6 @@ export class GenerateComponent implements OnInit {
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
-    this.frontendZipFiles = [];
     if (input.files && input.files.length > 0) {
       for (let i = 0; i < input.files.length; i++) {
         const file = input.files.item(i);
@@ -509,13 +401,12 @@ export class GenerateComponent implements OnInit {
         } else {
           alert('Por favor sube solo archivos .zip');
           input.value = '';
-          this.frontendZipFiles = [];
           break;
         }
       }
     }
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 }
+

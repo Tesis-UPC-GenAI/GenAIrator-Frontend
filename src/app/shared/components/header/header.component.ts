@@ -14,6 +14,7 @@ import { User } from '../../../core/models/user.model';
 export class HeaderComponent implements OnInit {
   currentUser: User | null = null;
   isMenuOpen = false;
+  isUserDropdownOpen = false;
 
   constructor(
     private authService: AuthService,
@@ -28,12 +29,24 @@ export class HeaderComponent implements OnInit {
 
   toggleMenu(): void {
     this.isMenuOpen = !this.isMenuOpen;
+    if (this.isMenuOpen) {
+      this.isUserDropdownOpen = false;
+    }
+  }
+
+  toggleUserDropdown(): void {
+    this.isUserDropdownOpen = !this.isUserDropdownOpen;
+  }
+
+  closeUserDropdown(): void {
+    this.isUserDropdownOpen = false;
   }
 
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);
     this.isMenuOpen = false;
+    this.isUserDropdownOpen = false;
   }
 
   get isAuthenticated(): boolean {
