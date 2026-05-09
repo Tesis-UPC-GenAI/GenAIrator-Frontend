@@ -1,11 +1,9 @@
-/* Layout principal */
 .main-content {
   display: flex;
   flex-direction: column;
   min-height: calc(100vh - 200px);
 }
 
-/* Skip link para accesibilidad */
 .skip-link {
   position: absolute;
   top: -40px;

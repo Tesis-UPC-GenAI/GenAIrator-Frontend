@@ -1,9 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-/**
- * Componente de pie de página.
- */
 @Component({
   selector: 'app-footer',
   standalone: true,

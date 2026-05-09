@@ -3,16 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
-import { CardComponent } from '../../../shared/components/card/card.component';
-import { ButtonComponent } from '../../../shared/components/button/button.component';
 
-/**
- * Componente de registro con validaciones personalizadas.
- */
+
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, CardComponent, ButtonComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
@@ -20,6 +16,8 @@ export class RegisterComponent implements OnInit {
   registerForm!: FormGroup;
   isLoading = false;
   errorMessage = '';
+  showPassword = false;
+  showConfirmPassword = false;
 
   constructor(
     private fb: FormBuilder,
@@ -28,7 +26,6 @@ export class RegisterComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Redirigir si ya está autenticado
     if (this.authService.isAuthenticated()) {
       this.router.navigate(['/dashboard']);
       return;
@@ -42,9 +39,6 @@ export class RegisterComponent implements OnInit {
     }, { validators: this.passwordMatchValidator });
   }
 
-  /**
-   * Validador personalizado para verificar que las contraseñas coincidan
-   */
   passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
     const password = control.get('password');
     const confirmPassword = control.get('confirmPassword');
@@ -62,7 +56,6 @@ export class RegisterComponent implements OnInit {
       return { passwordMismatch: true };
     }
 
-    // Limpiar error si las contraseñas coinciden
     const errors = confirmPassword.errors;
     if (errors) {
       delete errors['passwordMismatch'];
@@ -148,5 +141,13 @@ export class RegisterComponent implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleConfirmPasswordVisibility(): void {
+    this.showConfirmPassword = !this.showConfirmPassword;
   }
 }

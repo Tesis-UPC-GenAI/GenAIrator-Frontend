@@ -4,9 +4,6 @@ import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { User } from '../../../core/models/user.model';
 
-/**
- * Componente de cabecera con navegación y botón de logout.
- */
 @Component({
   selector: 'app-header',
   standalone: true,

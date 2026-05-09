@@ -104,5 +104,4 @@ import { CardComponent } from '../../shared/components/card/card.component';
   ],
 })
 export class ImportDesignSystemComponent {
-  // This component was repurposed as a help page. No upload logic required.
 }

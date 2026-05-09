@@ -5,9 +5,6 @@ import { HttpClient } from '@angular/common/http';
 import { User, LoginCredentials, RegisterData, AuthResponse } from '../models/user.model';
 import { environment } from '../../../environments/environment';
 
-/**
- * Servicio de autenticación que llama al backend .NET Core
- */
 @Injectable({
   providedIn: 'root',
 })
@@ -15,7 +12,6 @@ export class AuthService {
   private readonly STORAGE_KEY = 'genai_auth_token';
   private readonly USER_KEY = 'genai_user';
 
-  // Estado reactivo del usuario actual
   private currentUserSubject = new BehaviorSubject<User | null>(this.getUserFromStorage());
   public currentUser$ = this.currentUserSubject.asObservable();
 
@@ -47,12 +43,7 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
-  /**
-   * Registro: llama a POST /api/auth/register
-   * Mapea los nombres de campos al contrato del backend (nombre, email, contraseña)
-   */
   register(data: RegisterData): Observable<AuthResponse> {
-    // Validación básica en cliente
     if (!this.isValidEmail(data.email)) {
       return throwError(() => new Error('Email inválido'));
     }
@@ -96,9 +87,6 @@ export class AuthService {
       );
   }
 
-  /**
-   * Login: llama a POST /api/auth/login
-   */
   login(credentials: LoginCredentials): Observable<AuthResponse> {
     if (!this.isValidEmail(credentials.email)) {
       return throwError(() => new Error('Email inválido'));

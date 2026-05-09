@@ -17,7 +17,6 @@ import { Observable } from 'rxjs';
     <div class="page-container">
       <div class="container">
         <div style="max-width: 800px; margin: 0 auto;">
-          <!-- Error view when generation failed -->
           <app-card
             class="text-center mb-lg"
             *ngIf="request && (request.estado || request.status) === 'Failed'"
@@ -38,7 +37,6 @@ import { Observable } from 'rxjs';
             </div>
           </app-card>
 
-          <!-- Normal success/content view -->
           <app-card
             class="text-center"
             *ngIf="request && (request.estado || request.status) !== 'Failed'"
@@ -151,6 +149,7 @@ import { Observable } from 'rxjs';
     </div>
   `,
 })
+
 export class ResultsComponent implements OnInit {
   request?: GenerationRequest;
   canDownload = false;
@@ -158,7 +157,6 @@ export class ResultsComponent implements OnInit {
   isPushing = false;
   private pollTimer: number | null = null;
 
-  // Placeholder stats (could be improved to parse real info)
   componentsCount = 0;
   linesOfCode = 0;
   tokensApplied = 0;
@@ -174,16 +172,13 @@ export class ResultsComponent implements OnInit {
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (!id) {
-      // no id - go back
       this.router.navigate(['/dashboard']);
       return;
     }
 
     this.loadRequest(id);
 
-    // subscribe to reactive current user observable so template updates automatically
     this.currentUser$ = this.userService.currentUser$;
-    // trigger an initial fetch to populate the subject if needed
     this.userService.getMe().subscribe({ next: () => {}, error: () => {} });
   }
 
@@ -197,10 +192,8 @@ export class ResultsComponent implements OnInit {
         if (r) {
           this.request = r;
           this.canDownload = (r.estado || r.status || '').toLowerCase() === 'completed';
-          // Populate displayed metrics from the request if available
           this.componentsCount = r.componentesGenerados ?? 0;
           this.linesOfCode = r.lineasDeCodigo ?? 0;
-          // If still processing, start polling for status updates
           const status = (r.estado || r.status || '').toLowerCase();
           if (status !== 'completed' && status !== 'failed') {
             this.startPolling(id);
@@ -230,7 +223,6 @@ export class ResultsComponent implements OnInit {
         }
       },
       error: () => {
-        // ignore polling errors for now
       },
     });
   }
@@ -256,7 +248,6 @@ export class ResultsComponent implements OnInit {
 
     if (!confirm(confirmMessage)) return;
 
-    // Notify user upload is starting
     this.toastr.info('Subiendo a GitHub, por favor espera...');
     this.isPushing = true;
 
@@ -264,7 +255,6 @@ export class ResultsComponent implements OnInit {
       next: (res) => {
         this.isPushing = false;
         this.toastr.success('¡Repositorio subido correctamente!');
-        // refresh request data to show repo URL
         this.loadRequest(Number(id));
       },
       error: (err) => {

@@ -2,7 +2,6 @@ import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
-  // Rutas públicas
   {
     path: '',
     redirectTo: '/login',
@@ -19,7 +18,6 @@ export const routes: Routes = [
       import('./features/auth/register/register.component').then((m) => m.RegisterComponent),
   },
 
-  // Rutas protegidas (requieren autenticación)
   {
     path: 'dashboard',
     loadComponent: () =>
@@ -71,7 +69,6 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
 
-  // Ruta 404
   {
     path: '**',
     loadComponent: () =>

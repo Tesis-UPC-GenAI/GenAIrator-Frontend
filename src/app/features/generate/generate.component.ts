@@ -9,7 +9,7 @@ import {
   FormControl,
   Validators,
 } from '@angular/forms';
-// Removed DesignSystemService and Observable imports as design-system selection was replaced by builderViews
+
 import { GenerationService } from '../../core/services/generation.service';
 import { Router } from '@angular/router';
 import { CardComponent } from '../../shared/components/card/card.component';
@@ -49,7 +49,6 @@ import { CardComponent } from '../../shared/components/card/card.component';
                   <h2 class="config-title">Configuración</h2>
                 </div>
 
-                <!-- Frontend Section -->
                 <div class="config-section">
                   <div class="section-header">
                     <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -175,7 +174,6 @@ import { CardComponent } from '../../shared/components/card/card.component';
                   </div>
                 </div>
 
-                <!-- Backend Section -->
                 <div class="config-section">
                   <div class="section-header">
                     <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -213,7 +211,6 @@ import { CardComponent } from '../../shared/components/card/card.component';
                   </div>
                 </div>
 
-                <!-- Options Section -->
                 <div class="config-section">
                   <div class="section-header">
                     <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -248,7 +245,6 @@ import { CardComponent } from '../../shared/components/card/card.component';
               </app-card>
             </div>
 
-            <!-- Área principal -->
             <div class="main-area">
               <app-card>
                 <div class="preview-header">
@@ -269,7 +265,6 @@ import { CardComponent } from '../../shared/components/card/card.component';
                   <h2 class="preview-title">Vista Previa del Proyecto</h2>
                 </div>
 
-                <!-- File Upload Section -->
                 <div class="upload-section">
                   <label class="form-label">
                     <span class="label-text">Código Frontend</span>
@@ -346,7 +341,6 @@ import { CardComponent } from '../../shared/components/card/card.component';
                   </div>
                 </div>
 
-                <!-- Description Section -->
                 <div class="description-section">
                   <label class="form-label">
                     <span class="label-text">Descripción del Proyecto</span>
@@ -380,7 +374,6 @@ import { CardComponent } from '../../shared/components/card/card.component';
                   </div>
                 </div>
 
-                <!-- Actions -->
                 <div class="actions-bar">
                   <a routerLink="/dashboard" class="btn btn-secondary">
                     <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -417,12 +410,10 @@ export class GenerateComponent implements OnInit {
   generationForm: FormGroup;
   frontendZipFiles: File[] = [];
 
-  // Dropdown options
   frameworks = ['React', 'Angular', 'Vue'];
   lenguajes = ['TypeScript', 'JavaScript'];
   estilos = ['CSS Modules', 'Styled Components', 'Tailwind'];
 
-  // Dropdown states
   isFrameworkOpen = false;
   isLenguajeOpen = false;
   isEstiloOpen = false;
@@ -438,13 +429,11 @@ export class GenerateComponent implements OnInit {
       estilo: ['Tailwind'],
       incluirTests: [false],
       incluirDoc: [false],
-      // Removed builderViews/commandString; file upload handled via onFileSelected
       projectDescription: ['', Validators.required],
     });
     this.frontendZipFiles = [];
   }
 
-  // Custom dropdown methods
   toggleFrameworkOpen(): void {
     this.isFrameworkOpen = !this.isFrameworkOpen;
     this.isLenguajeOpen = false;
@@ -484,7 +473,6 @@ export class GenerateComponent implements OnInit {
       return;
     }
 
-    // Build FormData to include the uploaded ZIP
     const form = new FormData();
     form.append('framework', this.generationForm.get('framework')?.value || '');
     form.append('lenguaje', this.generationForm.get('lenguaje')?.value || '');
@@ -492,7 +480,6 @@ export class GenerateComponent implements OnInit {
     form.append('incluirTests', this.generationForm.get('incluirTests')?.value ? 'true' : 'false');
     form.append('incluirDoc', this.generationForm.get('incluirDoc')?.value ? 'true' : 'false');
     form.append('projectDescription', this.generationForm.get('projectDescription')?.value || '');
-    // Append all selected zip files using the field name expected by the backend
     for (let i = 0; i < this.frontendZipFiles.length; i++) {
       const f = this.frontendZipFiles[i];
       form.append('frontendZips', f, f.name);
@@ -530,7 +517,5 @@ export class GenerateComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Lifecycle hook required by OnInit. Initialization is already done
-    // in the constructor (form and initial view), so no-op for now.
   }
 }

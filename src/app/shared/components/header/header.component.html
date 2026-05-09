@@ -1,14 +1,17 @@
 <header class="header">
   <div class="container">
     <div class="header-content">
-      <!-- Logo a la izquierda -->
       <div class="header-brand">
         <a routerLink="/" class="brand-link">
+          <svg class="brand-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+            <path d="m12 2 10 5-10 5L2 7Z"></path>
+          </svg>
           <span class="brand-text">GenAIrator</span>
         </a>
       </div>
 
-      <!-- Navegación centrada -->
       <nav class="header-nav" [class.is-open]="isMenuOpen" aria-label="Navegación principal">
         <div *ngIf="isAuthenticated" class="nav-links">
           <a
@@ -54,7 +57,6 @@
         </div>
       </nav>
 
-      <!-- Acciones a la derecha -->
       <div class="header-actions">
         <div *ngIf="isAuthenticated && currentUser" class="user-info">
           <span class="user-name">{{ currentUser.name }}</span>
@@ -72,7 +74,6 @@
           </a>
         </div>
 
-        <!-- Botón menú móvil -->
         <button
           class="menu-toggle hide-desktop"
           (click)="toggleMenu()"

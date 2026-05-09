@@ -2,10 +2,6 @@ import { Component, Input, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-/**
- * Componente reutilizable de input con soporte para formularios reactivos
- * y accesibilidad completa (WCAG AA).
- */
 @Component({
   selector: 'app-input',
   standalone: true,
@@ -67,7 +63,6 @@ export class InputComponent implements ControlValueAccessor {
     return `${this.id}-error`;
   }
 
-  // ControlValueAccessor implementation
   onChange: (value: string) => void = () => {};
   onTouched: () => void = () => {};
 

@@ -26,7 +26,6 @@ export class UserService {
 
     return this.http.post(`${this.baseUrl}/save-pat`, { gitHubPat }, { headers }).pipe(
       tap(() => {
-        // refresh current user after saving PAT to update subscribers
         this.getMe().subscribe({ next: (u) => this.setCurrentUserFromApi(u), error: () => {} });
       }),
     );

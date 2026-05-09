@@ -229,7 +229,6 @@ export class SettingsComponent {
     this.userService.savePat(this.pat).subscribe({
       next: () => {
         this.toastr.success('PAT guardado correctamente');
-        // ensure other components get updated user state
         this.userService.getMe().subscribe({ next: () => {}, error: () => {} });
       },
       error: () => this.toastr.error('Error guardando el PAT'),

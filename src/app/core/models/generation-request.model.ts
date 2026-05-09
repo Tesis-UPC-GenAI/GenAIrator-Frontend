@@ -1,5 +1,4 @@
 export interface GenerationRequest {
-  // Backend returns 'id' but some places may expect 'generationRequestId'
   id?: number;
   generationRequestId?: number;
 
@@ -9,7 +8,6 @@ export interface GenerationRequest {
   incluirTests?: boolean;
   incluirDoc?: boolean;
   estado?: 'Pending' | 'Processing' | 'Completed' | 'Failed' | string;
-  // Backwards-compatible alias some code may expect
   status?: 'Pending' | 'Processing' | 'Completed' | 'Failed' | string;
 
   resultadoPath?: string;
@@ -25,13 +23,13 @@ export interface GenerationRequest {
   lighthousePerformanceScore?: number;
   lighthouseAccessibilityScore?: number;
   generationLogs?: GenerationLog[];
-  fechaCreacion: string; // ISO date string
+  fechaCreacion: string;
   fechaActualizacion?: string;
   gitHubRepoUrl?: string | null;
 }
 
 export interface GenerationLog {
-  timestamp: string; // ISO date
+  timestamp: string;
   logLevel?: string;
   message?: string;
 }

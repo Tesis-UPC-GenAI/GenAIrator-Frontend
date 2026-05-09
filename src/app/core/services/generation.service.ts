@@ -26,7 +26,6 @@ export class GenerationService {
     return this.http.post<any>(`${this.baseUrl}/start`, data, { headers });
   }
 
-  // New: send FormData for uploads (do not set Content-Type so browser sets boundary)
   startGenerationForm(formData: FormData): Observable<any> {
     const token = this.auth.getToken();
     const headers = token
@@ -47,7 +46,6 @@ export class GenerationService {
           ...item,
           status: item.status || (item as any).estado,
           generationRequestId: item.generationRequestId || item.id,
-          // token & metric fields mapping (backend returns camelCase)
           totalTokens: (item as any).totalTokens ?? (item as any).tokensAplicados,
           promptTokens: (item as any).promptTokens,
           completionTokens: (item as any).completionTokens,

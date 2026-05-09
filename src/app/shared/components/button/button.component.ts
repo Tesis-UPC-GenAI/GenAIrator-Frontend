@@ -1,9 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-/**
- * Componente reutilizable de botón con variantes y accesibilidad.
- */
 @Component({
   selector: 'app-button',
   standalone: true,

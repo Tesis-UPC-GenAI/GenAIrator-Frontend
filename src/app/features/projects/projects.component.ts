@@ -18,20 +18,16 @@ import { GenerationRequest } from '../../core/models/generation-request.model';
           <p class="text-secondary mt-sm">Gestiona todos tus proyectos de generación de código</p>
         </div>
 
-        <!-- Loading State -->
         <div *ngIf="loading" class="loading-container">
           <div class="spinner"></div>
           <p class="text-secondary mt-md">Cargando proyectos...</p>
         </div>
 
-        <!-- Error State -->
         <div *ngIf="error" class="alert alert-error">
           {{ error }}
         </div>
 
-        <!-- Content -->
         <ng-container *ngIf="!loading && !error">
-          <!-- Empty State -->
           <div *ngIf="proyectos.length === 0" class="empty-state">
             <div class="empty-state-icon">📦</div>
             <h2 class="empty-state-title">Aún no has creado ningún proyecto</h2>
@@ -55,7 +51,6 @@ import { GenerationRequest } from '../../core/models/generation-request.model';
             </div>
           </div>
 
-          <!-- Projects Grid -->
           <div *ngIf="proyectos.length > 0" class="projects-grid">
             <app-card *ngFor="let p of proyectos" class="project-card">
               <div class="project-card-header">

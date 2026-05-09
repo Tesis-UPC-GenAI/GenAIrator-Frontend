@@ -39,11 +39,12 @@
 .brand-text {
   font-size: var(--font-size-xl);
   font-weight: 800;
-  background: var(--color-primary-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #0f172a;
   letter-spacing: -0.025em;
+}
+
+.brand-icon {
+  color: #0f172a;
 }
 
 .header-nav {
@@ -138,8 +139,8 @@
 .nav-link:hover {
   color: var(--color-primary);
   background-color: var(--color-primary-light);
-  box-shadow: var(--shadow-sm);    /* ⬅ efecto visual sin mover el enlace */
-  transform: translateY(0);        /* ⬅ sin salto vertical */
+  box-shadow: var(--shadow-sm);   
+  transform: translateY(0);       
 }
 
 .nav-link:hover::before {
@@ -150,7 +151,7 @@
   color: var(--color-primary);
   font-weight: 700;
   background: linear-gradient(135deg, var(--color-primary-light) 0%, rgba(59, 130, 246, 0.05) 100%);
-  transform: translateY(0);        /* ⬅ activo también alineado */
+  transform: translateY(0);  
 }
 
 .nav-link.active::before {
@@ -202,7 +203,6 @@
   gap: var(--spacing-sm);
 }
 
-/* Responsive */
 @media (max-width: 1300px) {
   .header-content {
     gap: var(--spacing-sm);

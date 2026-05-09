@@ -8,9 +8,6 @@ import { GenerationRequest } from '../../core/models/generation-request.model';
 import { User } from '../../core/models/user.model';
 import { CardComponent } from '../../shared/components/card/card.component';
 
-/**
- * Componente de Dashboard (protegido).
- */
 @Component({
   selector: 'app-dashboard',
   standalone: true,
