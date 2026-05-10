@@ -5,6 +5,7 @@ import { CardComponent } from '../../shared/components/card/card.component';
 import { GenerationService } from '../../core/services/generation.service';
 import { Observable } from 'rxjs';
 import { GenerationRequest } from '../../core/models/generation-request.model';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-projects',
@@ -280,7 +281,10 @@ export class ProjectsComponent implements OnInit {
   loading = true;
   error: string | null = null;
 
-  constructor(private generationService: GenerationService) {}
+  constructor(
+    private generationService: GenerationService,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {
     this.generationService.getAllRequests().subscribe({
@@ -290,7 +294,13 @@ export class ProjectsComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error cargando proyectos:', err);
-        this.error = 'No se pudieron cargar los proyectos. Por favor, intenta nuevamente.';
+        if (err.status === 401) {
+          this.error = 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.';
+          this.toastr.error('Sesión expirada');
+        } else {
+          this.error = 'No se pudieron cargar los proyectos. Por favor, intenta nuevamente.';
+          this.toastr.error('Error al cargar proyectos');
+        }
         this.loading = false;
       },
     });

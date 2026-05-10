@@ -1,156 +1,23 @@
-﻿import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
-import { CardComponent } from '../../shared/components/card/card.component';
 import { GenerationService } from '../../core/services/generation.service';
 import { GenerationRequest } from '../../core/models/generation-request.model';
 import { ToastrService } from 'ngx-toastr';
 import { UserService } from '../../core/services/user.service';
 import { User } from '../../core/models/user.model';
 import { Observable } from 'rxjs';
+import { ConfirmService } from '../../core/services/confirm.service';
 
 @Component({
   selector: 'app-results',
   standalone: true,
-  imports: [CommonModule, RouterModule, CardComponent],
-  template: `
-    <div class="page-container">
-      <div class="container">
-        <div style="max-width: 800px; margin: 0 auto;">
-          <app-card
-            class="text-center mb-lg"
-            *ngIf="request && (request.estado || request.status) === 'Failed'"
-          >
-            <div class="error-icon mb-lg"></div>
-            <h2 class="text-2xl font-bold mb-md">Error al generar código</h2>
-            <p class="text-secondary mb-md error-message">
-              {{ request.errorMessage || 'Ocurrió un error inesperado durante la generación.' }}
-            </p>
-            <div class="flex gap-md justify-center">
-              <button class="btn btn-danger" (click)="onDelete()">Eliminar Proyecto</button>
-              <a routerLink="/dashboard" class="btn btn-secondary">Volver al Dashboard</a>
-            </div>
-            <div *ngIf="request && request.gitHubRepoUrl" style="margin-top:12px;">
-              <a [href]="request.gitHubRepoUrl" target="_blank" class="btn btn-link"
-                >Ver repositorio en GitHub</a
-              >
-            </div>
-          </app-card>
-
-          <app-card
-            class="text-center"
-            *ngIf="request && (request.estado || request.status) !== 'Failed'"
-          >
-            <div class="success-icon mb-lg"></div>
-            <h1 class="text-3xl font-bold mb-md">Código generado exitosamente!</h1>
-            <p class="text-secondary mb-xl">
-              Tu código ha sido generado y está listo para usar en tu proyecto.
-            </p>
-
-            <div class="grid grid-cols-1 grid-cols-md-3 gap-md mb-xl">
-              <div class="stat-item">
-                <span class="stat-value">{{ request.componentesGenerados || 0 }}</span>
-                <span class="stat-label">Componentes</span>
-              </div>
-              <div class="stat-item">
-                <span class="stat-value">{{ request.lineasDeCodigo || 0 }}</span>
-                <span class="stat-label">Líneas de código</span>
-              </div>
-              <div class="stat-item">
-                <span class="stat-value">{{ request.totalTokens || 0 }}</span>
-                <span class="stat-label">Tokens aplicados</span>
-              </div>
-            </div>
-
-            <div
-              class="flex gap-md justify-center flex-col"
-              style="max-width: 400px; margin: 0 auto;"
-            >
-              <button class="btn btn-primary" [disabled]="!canDownload" (click)="onDownload()">
-                Descargar Código
-              </button>
-              <button class="btn btn-danger" (click)="onDelete()">Eliminar Proyecto</button>
-              <button
-                *ngIf="request && (request.estado || request.status) === 'Completed'"
-                class="btn btn-outline-primary"
-                (click)="onPushToGitHub()"
-                [disabled]="!(currentUser$ | async)?.gitHubPatExists || isPushing"
-                [title]="
-                  !(currentUser$ | async)?.gitHubPatExists
-                    ? 'Por favor, añade tu Token PAT en Configuración para subir a GitHub'
-                    : null
-                "
-              >
-                {{
-                  isPushing
-                    ? 'Subiendo...'
-                    : request.gitHubRepoUrl
-                    ? 'Volver a Subir a GitHub'
-                    : 'Subir a GitHub'
-                }}
-              </button>
-              <a routerLink="/dashboard" class="btn btn-secondary">Volver al Dashboard</a>
-            </div>
-          </app-card>
-
-          <app-card
-            class="mt-lg"
-            *ngIf="request && (request.estado || request.status) !== 'Failed'"
-          >
-            <h2 class="text-lg font-semibold mb-md">Contenido generado</h2>
-            <ul class="text-sm text-secondary" style="list-style: none; padding: 0;">
-              <li class="mb-sm">{{ request.framework }} - {{ request.lenguaje || 'N/A' }}</li>
-              <li class="mb-sm">Estilos: {{ request.estilo || 'N/A' }}</li>
-              <li class="mb-sm">Incluir tests: {{ request.incluirTests ? 'Sí' : 'No' }}</li>
-              <li class="mb-sm">Incluir doc: {{ request.incluirDoc ? 'Sí' : 'No' }}</li>
-              <li class="mb-sm">Tokens de Prompt: {{ request.promptTokens || 0 }}</li>
-              <li class="mb-sm">Tokens de Salida: {{ request.completionTokens || 0 }}</li>
-            </ul>
-          </app-card>
-          <app-card
-            class="mt-md"
-            *ngIf="request && (request.estado || request.status) !== 'Failed'"
-          >
-            <h2 class="text-lg font-semibold mb-md">Validación externa</h2>
-            <ul class="text-sm text-secondary" style="list-style: none; padding: 0;">
-              <li class="mb-sm">Sonar Bugs: {{ request.sonarBugs ?? 'N/A' }}</li>
-              <li class="mb-sm">
-                Sonar Vulnerabilities: {{ request.sonarVulnerabilities ?? 'N/A' }}
-              </li>
-              <li class="mb-sm">Sonar Code Smells: {{ request.sonarCodeSmells ?? 'N/A' }}</li>
-
-              <li class="mb-sm">
-                Lighthouse Performance: {{ request.lighthousePerformanceScore ?? 'N/A' }}
-              </li>
-              <li class="mb-sm">
-                Lighthouse Accessibility: {{ request.lighthouseAccessibilityScore ?? 'N/A' }}
-              </li>
-            </ul>
-          </app-card>
-          <app-card
-            class="mt-md"
-            *ngIf="
-              request &&
-              (request.estado || request.status) !== 'Failed' &&
-              request.generationLogs?.length
-            "
-          >
-            <h2 class="text-lg font-semibold mb-md">Registro de generación</h2>
-            <ul class="text-sm text-secondary" style="list-style: none; padding: 0;">
-              <li *ngFor="let log of request.generationLogs" class="mb-sm">
-                <strong>{{ log.timestamp | date : 'short' }}</strong>
-                <span class="ml-sm text-muted">[{{ log.logLevel || 'Info' }}]</span>
-                <div>{{ log.message }}</div>
-              </li>
-            </ul>
-          </app-card>
-        </div>
-      </div>
-    </div>
-  `,
+  imports: [CommonModule, RouterModule],
+  templateUrl: './results.component.html',
+  styleUrls: ['./results.component.css'],
 })
 
-export class ResultsComponent implements OnInit {
+export class ResultsComponent implements OnInit, OnDestroy {
   request?: GenerationRequest;
   canDownload = false;
   currentUser$?: Observable<User | null>;
@@ -166,7 +33,8 @@ export class ResultsComponent implements OnInit {
     private generationService: GenerationService,
     private router: Router,
     private toastr: ToastrService,
-    private userService: UserService
+    private userService: UserService,
+    private confirmService: ConfirmService
   ) {}
 
   ngOnInit(): void {
@@ -181,6 +49,21 @@ export class ResultsComponent implements OnInit {
     this.currentUser$ = this.userService.currentUser$;
     this.userService.getMe().subscribe({ next: () => {}, error: () => {} });
   }
+
+  copyLog() {
+    if (!this.request || !this.request.generationLogs) return;
+    const logText = this.request.generationLogs
+      .map(l => `${l.timestamp} [${l.logLevel || 'Info'}] ${l.message}`)
+      .join('\n');
+    
+    navigator.clipboard.writeText(logText).then(() => {
+      this.toastr.success('Log copiado al portapapeles');
+    }).catch(err => {
+      console.error('Error al copiar log: ', err);
+      this.toastr.error('No se pudo copiar el log');
+    });
+  }
+
 
   ngOnDestroy(): void {
     this.stopPolling();
@@ -239,14 +122,20 @@ export class ResultsComponent implements OnInit {
     }
   }
 
-  onPushToGitHub() {
+  async onPushToGitHub() {
     if (!this.request) return;
     const id = this.request.generationRequestId || (this.request as any).id;
-    const confirmMessage = this.request.gitHubRepoUrl
-      ? 'El repositorio ya existe en GitHub. Esto reemplazará el repo existente. ¿Continuar?'
-      : '¿Subir este proyecto a GitHub usando tu PAT guardado?';
+    
+    const confirmed = await this.confirmService.confirm({
+      title: 'Subir a GitHub',
+      message: this.request.gitHubRepoUrl
+        ? 'El repositorio ya existe en GitHub. Esto reemplazará el repo existente. ¿Continuar?'
+        : '¿Subir este proyecto a GitHub usando tu PAT guardado?',
+      confirmText: 'Subir Proyecto',
+      type: 'info'
+    });
 
-    if (!confirm(confirmMessage)) return;
+    if (!confirmed) return;
 
     this.toastr.info('Subiendo a GitHub, por favor espera...');
     this.isPushing = true;
@@ -279,18 +168,29 @@ export class ResultsComponent implements OnInit {
         a.remove();
         window.URL.revokeObjectURL(url);
       },
-      error: () => alert('Error al descargar el proyecto'),
+      error: () => this.toastr.error('Error al descargar el proyecto'),
     });
   }
 
-  onDelete() {
+  async onDelete() {
     if (!this.request) return;
-    if (!confirm('¿Eliminar este proyecto generado? Esta acción no se puede deshacer.')) return;
+    
+    const confirmed = await this.confirmService.confirm({
+      title: 'Eliminar Proyecto',
+      message: '¿Estás seguro de que deseas eliminar este proyecto generado? Esta acción no se puede deshacer.',
+      confirmText: 'Eliminar definitivamente',
+      type: 'danger'
+    });
+
+    if (!confirmed) return;
 
     const id = this.request.generationRequestId || (this.request as any).id;
     this.generationService.deleteProject(Number(id)).subscribe({
-      next: () => this.router.navigate(['/projects']),
-      error: () => alert('No se pudo eliminar el proyecto'),
+      next: () => {
+        this.toastr.success('Proyecto eliminado correctamente');
+        this.router.navigate(['/projects']);
+      },
+      error: () => this.toastr.error('No se pudo eliminar el proyecto'),
     });
   }
 }

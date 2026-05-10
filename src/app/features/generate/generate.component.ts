@@ -1,18 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import {
   ReactiveFormsModule,
   FormBuilder,
   FormGroup,
-  FormArray,
-  FormControl,
   Validators,
 } from '@angular/forms';
-
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { GenerationService } from '../../core/services/generation.service';
-import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { ConfirmService } from '../../core/services/confirm.service';
 
 @Component({
   selector: 'app-generate',
@@ -273,7 +271,9 @@ export class GenerateComponent implements OnInit {
     private fb: FormBuilder,
     private generationService: GenerationService,
     private router: Router,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private toastr: ToastrService,
+    private confirmService: ConfirmService
   ) {
     this.generationForm = this.fb.group({
       framework: ['Angular'],
@@ -360,9 +360,15 @@ export class GenerateComponent implements OnInit {
     this.isEstiloOpen = false;
   }
 
-  onGenerate(): void {
+  async onGenerate(): Promise<void> {
     if (this.generationForm.invalid) {
-      alert('Por favor completa el formulario antes de generar.');
+      await this.confirmService.confirm({
+        title: 'Faltan detalles',
+        message: 'Por favor, describe tu proyecto en el campo de descripción antes de generar el código.',
+        confirmText: 'Entendido',
+        type: 'warning',
+        showCancel: false
+      });
       return;
     }
 
@@ -380,12 +386,12 @@ export class GenerateComponent implements OnInit {
 
     this.generationService.startGenerationForm(form).subscribe({
       next: (res) => {
-        alert('Generación iniciada');
+        this.toastr.success('Generación iniciada correctamente');
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
         console.error('Error iniciando generación', err);
-        alert('Error al iniciar la generación. Revisa la consola para más detalles.');
+        this.toastr.error('Error al iniciar la generación');
       },
     });
   }
@@ -399,7 +405,7 @@ export class GenerateComponent implements OnInit {
         if (file.name.toLowerCase().endsWith('.zip')) {
           this.frontendZipFiles.push(file);
         } else {
-          alert('Por favor sube solo archivos .zip');
+          this.toastr.warning('Por favor sube solo archivos .zip');
           input.value = '';
           break;
         }
