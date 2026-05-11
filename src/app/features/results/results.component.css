@@ -28,6 +28,32 @@
   margin-bottom: 16px;
 }
 
+.status-badge-processing {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: #eff6ff;
+  color: #2563eb;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.spinner-small {
+  width: 14px;
+  height: 14px;
+  border: 2px solid #2563eb;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 .main-title {
   font-size: 40px;
   font-weight: 800;

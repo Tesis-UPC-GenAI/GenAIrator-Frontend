@@ -113,7 +113,7 @@ import { ToastrService } from 'ngx-toastr';
               </div>
               <div class="status-badge-container">
                 <div class="status-badge" [ngClass]="(p.status || p.estado)?.toLowerCase() || ''">
-                  {{ (p.status || p.estado === 'Completed' ? 'COMPLETADO' : (p.status || p.estado)) | uppercase }}
+                  {{ getStatusLabel(p.status || p.estado) }}
                 </div>
               </div>
             </div>
@@ -623,5 +623,15 @@ export class ProjectsComponent implements OnInit {
         this.toastr.error('Error al descargar el proyecto');
       },
     });
+  }
+
+  getStatusLabel(status: string | undefined): string {
+    const s = status?.toLowerCase();
+    switch (s) {
+      case 'completed': return 'COMPLETADO';
+      case 'processing': return 'EN PROCESO';
+      case 'failed': return 'FALLIDO';
+      default: return (status || '').toUpperCase();
+    }
   }
 }

@@ -8,8 +8,12 @@
         </svg>
         Resultado de generación
       </div>
-      <h1 class="main-title">Código generado exitosamente</h1>
-      <p class="subtitle">Tu proyecto ha sido generado, validado y está listo para descargar o continuar editando.</p>
+      <div class="status-badge-processing" *ngIf="(request.estado || request.status) === 'Processing'">
+        <div class="spinner-small"></div>
+        Generación en curso
+      </div>
+      <h1 class="main-title">{{ mainTitle }}</h1>
+      <p class="subtitle">{{ subtitle }}</p>
     </div>
 
     <div class="stats-card">

@@ -28,6 +28,22 @@ export class ResultsComponent implements OnInit, OnDestroy {
   linesOfCode = 0;
   tokensApplied = 0;
 
+  get mainTitle(): string {
+    const status = (this.request?.estado || this.request?.status || '').toLowerCase();
+    if (status === 'completed') return 'Código generado exitosamente';
+    if (status === 'processing') return 'Generando tu proyecto...';
+    if (status === 'failed') return 'Error en la generación';
+    return 'Detalles del proyecto';
+  }
+
+  get subtitle(): string {
+    const status = (this.request?.estado || this.request?.status || '').toLowerCase();
+    if (status === 'completed') return 'Tu proyecto ha sido generado, validado y está listo para descargar o continuar editando.';
+    if (status === 'processing') return 'Estamos trabajando en la creación de tu código. Por favor, espera un momento.';
+    if (status === 'failed') return 'Hubo un problema al procesar tu solicitud. Revisa los logs para más detalles.';
+    return '';
+  }
+
   constructor(
     private route: ActivatedRoute,
     private generationService: GenerationService,
