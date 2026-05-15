@@ -165,6 +165,69 @@
   color: #94a3b8;
 }
 
+.github-push-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 12px;
+  width: 100%;
+}
+
+.github-push-banner--loading {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+}
+
+.github-push-banner--published {
+  background: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.github-push-banner__text {
+  flex: 1;
+  min-width: 0;
+}
+
+.github-push-banner__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: #047857;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.15s ease;
+}
+
+.github-push-banner__btn:hover {
+  background: #065f46;
+  color: #fff;
+}
+
+.github-repo-link {
+  color: #2563eb;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: underline;
+  word-break: break-all;
+}
+
+.btn-spinner {
+  flex-shrink: 0;
+}
+
 /* Actions Section */
 .actions-section {
   width: 350px;

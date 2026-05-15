@@ -6,7 +6,7 @@ import { GenerationRequest } from '../../core/models/generation-request.model';
 import { ToastrService } from 'ngx-toastr';
 import { UserService } from '../../core/services/user.service';
 import { User } from '../../core/models/user.model';
-import { Observable } from 'rxjs';
+import { Observable, finalize } from 'rxjs';
 import { ConfirmService } from '../../core/services/confirm.service';
 
 @Component({
@@ -21,8 +21,24 @@ export class ResultsComponent implements OnInit, OnDestroy {
   request?: GenerationRequest;
   canDownload = false;
   currentUser$?: Observable<User | null>;
-  isPushing = false;
+  isPushingToGitHub = false;
+  pushingGenerationId?: number;
   private pollTimer: number | null = null;
+
+  get isGitHubPushInProgress(): boolean {
+    return this.isPushingToGitHub;
+  }
+
+  get hasPublishedGitHubRepo(): boolean {
+    return !!this.request?.gitHubRepoUrl?.trim();
+  }
+
+  get gitHubPushButtonLabel(): string {
+    if (this.isPushingToGitHub) {
+      return 'Subiendo...';
+    }
+    return this.hasPublishedGitHubRepo ? 'Actualizar en GitHub' : 'Subir a GitHub';
+  }
 
   componentsCount = 0;
   linesOfCode = 0;
@@ -139,33 +155,49 @@ export class ResultsComponent implements OnInit, OnDestroy {
   }
 
   async onPushToGitHub() {
-    if (!this.request) return;
+    if (!this.request || this.isPushingToGitHub) return;
+
     const id = this.request.generationRequestId || (this.request as any).id;
-    
+    const requestId = Number(id);
+
     const confirmed = await this.confirmService.confirm({
-      title: 'Subir a GitHub',
-      message: this.request.gitHubRepoUrl
-        ? 'El repositorio ya existe en GitHub. Esto reemplazará el repo existente. ¿Continuar?'
+      title: this.hasPublishedGitHubRepo ? 'Actualizar en GitHub' : 'Subir a GitHub',
+      message: this.hasPublishedGitHubRepo
+        ? 'El repositorio ya está vinculado. Se actualizará el contenido en GitHub (o se recreará si lo eliminaste). ¿Continuar?'
         : '¿Subir este proyecto a GitHub usando tu PAT guardado?',
-      confirmText: 'Subir Proyecto',
+      confirmText: this.hasPublishedGitHubRepo ? 'Actualizar' : 'Subir Proyecto',
       type: 'info'
     });
 
     if (!confirmed) return;
 
-    this.toastr.info('Subiendo a GitHub, por favor espera...');
-    this.isPushing = true;
+    this.isPushingToGitHub = true;
+    this.pushingGenerationId = requestId;
 
-    this.generationService.pushToGitHub(Number(id)).subscribe({
+    this.generationService.pushToGitHub(requestId).pipe(
+      finalize(() => {
+        this.isPushingToGitHub = false;
+        this.pushingGenerationId = undefined;
+      })
+    ).subscribe({
       next: (res) => {
-        this.isPushing = false;
-        this.toastr.success('¡Repositorio subido correctamente!');
-        this.loadRequest(Number(id));
+        if (this.request) {
+          this.request.gitHubRepoUrl = res.repoUrl;
+        }
+        this.toastr.success('Proyecto subido correctamente a GitHub.');
+        if (res.repoUrl) {
+          this.toastr.info(res.repoUrl, 'Repositorio en GitHub', {
+            timeOut: 8000,
+            closeButton: true,
+          });
+        }
+        this.loadRequest(requestId);
       },
       error: (err) => {
-        this.isPushing = false;
-        const msg = err && err.error ? err.error : 'Error al subir a GitHub';
-        this.toastr.error(msg);
+        this.toastr.error(
+          this.extractApiErrorMessage(err, 'Error al subir a GitHub'),
+          'Error de publicación'
+        );
       },
     });
   }
@@ -186,6 +218,39 @@ export class ResultsComponent implements OnInit, OnDestroy {
       },
       error: () => this.toastr.error('Error al descargar el proyecto'),
     });
+  }
+
+  private extractApiErrorMessage(err: unknown, fallback: string): string {
+    if (!err || typeof err !== 'object') {
+      return fallback;
+    }
+
+    const httpErr = err as { error?: unknown; message?: string };
+    const body = httpErr.error;
+
+    if (typeof body === 'string' && body.trim().length > 0) {
+      return body;
+    }
+
+    if (body && typeof body === 'object') {
+      const payload = body as { message?: string; title?: string };
+      if (payload.message) {
+        return payload.message;
+      }
+      if (payload.title) {
+        return payload.title;
+      }
+    }
+
+    if (httpErr.message) {
+      return httpErr.message;
+    }
+
+    try {
+      return JSON.stringify(body ?? err);
+    } catch {
+      return fallback;
+    }
   }
 
   async onDelete() {
