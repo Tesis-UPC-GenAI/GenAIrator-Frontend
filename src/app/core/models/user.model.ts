@@ -21,3 +21,14 @@ export interface AuthResponse {
   user: User;
   token: string;
 }
+
+export interface MessageResponse {
+  message: string;
+}
+
+export interface ResetPasswordPayload {
+  email: string;
+  token: string;
+  contrasena: string;
+  confirmarContrasena: string;
+}

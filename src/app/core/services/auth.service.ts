@@ -2,7 +2,14 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { tap, map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
-import { User, LoginCredentials, RegisterData, AuthResponse } from '../models/user.model';
+import {
+  User,
+  LoginCredentials,
+  RegisterData,
+  AuthResponse,
+  MessageResponse,
+  ResetPasswordPayload,
+} from '../models/user.model';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -122,6 +129,39 @@ export class AuthService {
         return { user, token: res.token } as AuthResponse;
       }),
     );
+  }
+
+  forgotPassword(email: string): Observable<MessageResponse> {
+    if (!this.isValidEmail(email)) {
+      return throwError(() => new Error('Email inválido'));
+    }
+
+    return this.http.post<MessageResponse>(`${this.baseUrl}/forgot-password`, { email });
+  }
+
+  resetPassword(payload: ResetPasswordPayload): Observable<MessageResponse> {
+    if (!this.isValidEmail(payload.email)) {
+      return throwError(() => new Error('Email inválido'));
+    }
+
+    if (payload.contrasena.length < 6) {
+      return throwError(() => new Error('La contraseña debe tener al menos 6 caracteres'));
+    }
+
+    if (payload.contrasena !== payload.confirmarContrasena) {
+      return throwError(() => new Error('Las contraseñas no coinciden'));
+    }
+
+    if (!payload.token?.trim()) {
+      return throwError(() => new Error('El enlace de restablecimiento no es válido'));
+    }
+
+    return this.http.post<MessageResponse>(`${this.baseUrl}/reset-password`, {
+      email: payload.email,
+      token: payload.token,
+      contrasena: payload.contrasena,
+      confirmarContrasena: payload.confirmarContrasena,
+    });
   }
 
   logout(): void {
