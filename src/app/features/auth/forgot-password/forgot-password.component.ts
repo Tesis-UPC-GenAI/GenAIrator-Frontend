@@ -9,7 +9,7 @@ import { AuthService } from '../../../core/services/auth.service';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './forgot-password.component.html',
-  styleUrls: ['./forgot-password.component.css'],
+  styleUrls: ['./forgot-password.component.css', '../login/login.component.css'],
 })
 export class ForgotPasswordComponent implements OnInit {
   forgotForm!: FormGroup;

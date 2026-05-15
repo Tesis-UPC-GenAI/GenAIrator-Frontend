@@ -16,7 +16,7 @@ import { AuthService } from '../../../core/services/auth.service';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './reset-password.component.html',
-  styleUrls: ['./reset-password.component.css'],
+  styleUrls: ['./reset-password.component.css', '../login/login.component.css'],
 })
 export class ResetPasswordComponent implements OnInit {
   resetForm!: FormGroup;
