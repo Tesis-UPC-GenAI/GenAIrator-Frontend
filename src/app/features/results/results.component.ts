@@ -40,6 +40,68 @@ export class ResultsComponent implements OnInit, OnDestroy {
     return this.hasPublishedGitHubRepo ? 'Actualizar en GitHub' : 'Subir a GitHub';
   }
 
+  getQualityAnalysisStatus(): string {
+    return (this.request?.qualityAnalysisStatus || 'NotStarted').trim();
+  }
+
+  isQualityNotStarted(): boolean {
+    return this.getQualityAnalysisStatus() === 'NotStarted';
+  }
+
+  hasQualityMetrics(): boolean {
+    if (!this.request) {
+      return false;
+    }
+
+    return [
+      this.request.sonarBugs,
+      this.request.sonarVulnerabilities,
+      this.request.sonarCodeSmells,
+      this.request.lighthousePerformanceScore,
+      this.request.lighthouseAccessibilityScore,
+    ].some((value) => this.hasMetricValue(value));
+  }
+
+  hasMetricValue(value: number | null | undefined): boolean {
+    return value !== null && value !== undefined;
+  }
+
+  getQualityAnalysisLabel(): string {
+    switch (this.getQualityAnalysisStatus()) {
+      case 'Pending':
+        return 'Análisis pendiente';
+      case 'Running':
+        return 'Análisis en curso';
+      case 'Completed':
+        return 'Análisis completado';
+      case 'Failed':
+        return 'Análisis fallido';
+      case 'Skipped':
+        return 'Análisis omitido';
+      case 'NotStarted':
+      default:
+        return 'Validación externa no ejecutada';
+    }
+  }
+
+  getQualityAnalysisBadgeClass(): string {
+    switch (this.getQualityAnalysisStatus()) {
+      case 'Pending':
+        return 'quality-badge-pending';
+      case 'Running':
+        return 'quality-badge-running';
+      case 'Completed':
+        return 'quality-badge-completed';
+      case 'Failed':
+        return 'quality-badge-failed';
+      case 'Skipped':
+        return 'quality-badge-skipped';
+      case 'NotStarted':
+      default:
+        return 'quality-badge-not-started';
+    }
+  }
+
   componentsCount = 0;
   linesOfCode = 0;
   tokensApplied = 0;

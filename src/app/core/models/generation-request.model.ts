@@ -1,3 +1,11 @@
+export type QualityAnalysisStatus =
+  | 'NotStarted'
+  | 'Pending'
+  | 'Running'
+  | 'Completed'
+  | 'Failed'
+  | 'Skipped';
+
 export interface GenerationRequest {
   id?: number;
   generationRequestId?: number;
@@ -18,11 +26,15 @@ export interface GenerationRequest {
   promptTokens?: number;
   completionTokens?: number;
   errorMessage?: string;
-  sonarBugs?: number;
-  sonarVulnerabilities?: number;
-  sonarCodeSmells?: number;
-  lighthousePerformanceScore?: number;
-  lighthouseAccessibilityScore?: number;
+  sonarBugs?: number | null;
+  sonarVulnerabilities?: number | null;
+  sonarCodeSmells?: number | null;
+  lighthousePerformanceScore?: number | null;
+  lighthouseAccessibilityScore?: number | null;
+  qualityAnalysisStatus?: QualityAnalysisStatus | string;
+  qualityAnalysisStartedAt?: string | null;
+  qualityAnalysisCompletedAt?: string | null;
+  qualityAnalysisError?: string | null;
   generationLogs?: GenerationLog[];
   fechaCreacion: string;
   fechaActualizacion?: string;
