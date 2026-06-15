@@ -51,8 +51,8 @@ import { RouterModule } from '@angular/router';
               </div>
               <h3>Define lógica y framework</h3>
               <p>
-                Describe el comportamiento de tu aplicación y elige el frontend de salida: 
-                Angular, React o Vue. También configuramos el backend .NET.
+                Describe el comportamiento de tu aplicación. El frontend de salida estándar es 
+                Angular con TypeScript y Tailwind. También configuramos el backend .NET.
               </p>
             </div>
 

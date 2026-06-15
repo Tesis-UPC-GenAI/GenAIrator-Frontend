@@ -1,6 +1,7 @@
 export interface GenerationRequest {
   id?: number;
   generationRequestId?: number;
+  projectName?: string;
 
   framework: string;
   lenguaje?: string;

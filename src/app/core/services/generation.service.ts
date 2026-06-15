@@ -12,10 +12,31 @@ import { environment } from '../../../environments/environment';
 export class GenerationService {
   private baseUrl = `${environment.apiBaseUrl}/api/generation`;
 
+  private savedFormState: any = null;
+  private savedZipFiles: File[] = [];
+
   constructor(
     private http: HttpClient,
     private auth: AuthService,
   ) {}
+
+  setSavedState(formState: any, zipFiles: File[]): void {
+    this.savedFormState = formState;
+    this.savedZipFiles = [...zipFiles];
+  }
+
+  getSavedFormState(): any {
+    return this.savedFormState;
+  }
+
+  getSavedZipFiles(): File[] {
+    return this.savedZipFiles;
+  }
+
+  clearSavedState(): void {
+    this.savedFormState = null;
+    this.savedZipFiles = [];
+  }
 
   startGeneration(data: any): Observable<any> {
     const token = this.auth.getToken();

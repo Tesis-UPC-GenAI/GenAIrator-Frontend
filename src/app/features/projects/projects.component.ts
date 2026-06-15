@@ -1,16 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { CardComponent } from '../../shared/components/card/card.component';
 import { GenerationService } from '../../core/services/generation.service';
 import { Observable } from 'rxjs';
 import { GenerationRequest } from '../../core/models/generation-request.model';
 import { ToastrService } from 'ngx-toastr';
+import { ConfirmService } from '../../core/services/confirm.service';
 
 @Component({
   selector: 'app-projects',
   standalone: true,
-  imports: [CommonModule, RouterModule, CardComponent],
+  imports: [CommonModule, RouterModule],
   template: `
     <div class="projects-page">
       <div class="container">
@@ -108,7 +108,7 @@ import { ToastrService } from 'ngx-toastr';
                  </svg>
               </div>
               <div class="card-title-group">
-                <h3 class="p-name">{{ p.framework }}</h3>
+                <h3 class="p-name">{{ p.projectName || p.framework }}</h3>
                 <span class="p-info">ID: {{ p.id || p.generationRequestId }} • {{ p.framework }} • {{ p.lenguaje || 'TypeScript' }}</span>
               </div>
               <div class="status-badge-container">
@@ -180,12 +180,24 @@ import { ToastrService } from 'ngx-toastr';
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                 Descargar
               </button>
-              <button class="btn-icon-action">
+              <button class="btn-icon-action" 
+                      [disabled]="(p.status || p.estado) !== 'Completed'"
+                      [class.spinning]="pushingGenerationId === (p.id || p.generationRequestId)"
+                      (click)="onPushToGitHub(p); $event.stopPropagation()"
+                      [title]="p.gitHubRepoUrl ? 'Actualizar en GitHub' : 'Subir a GitHub'">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
               </button>
-              <button class="btn-icon-action">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
-              </button>
+              <div class="actions-menu-container">
+                <button class="btn-icon-action" (click)="toggleCardMenu(p, $event)" title="Más opciones">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
+                </button>
+                <div class="card-menu-dropdown" *ngIf="activeMenuProjectId === (p.id || p.generationRequestId)" (click)="$event.stopPropagation()">
+                  <button (click)="onDeleteProject(p)" class="menu-item danger">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                    Eliminar proyecto
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -495,6 +507,72 @@ import { ToastrService } from 'ngx-toastr';
         flex-shrink: 0;
       }
       .btn-icon-action:hover { background: #fcfcfd; color: #0f172a; transform: translateY(-1px); }
+      .btn-icon-action:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      .btn-icon-action.spinning svg {
+        animation: spin 1s linear infinite;
+      }
+
+      .actions-menu-container {
+        position: relative;
+        display: inline-block;
+      }
+      .card-menu-dropdown {
+        position: absolute;
+        bottom: calc(100% + 8px);
+        right: 0;
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        z-index: 50;
+        min-width: 180px;
+        padding: 6px;
+        animation: fadeInUp 0.2s ease-out;
+      }
+      @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(4px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .menu-item {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        background: none;
+        border: none;
+        font-size: 13px;
+        font-weight: 600;
+        color: #475569;
+        text-align: left;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-decoration: none;
+      }
+      .menu-item:hover:not(:disabled) {
+        background: #f1f5f9;
+        color: #0f172a;
+      }
+      .menu-item:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      .menu-item.danger {
+        color: #ef4444;
+      }
+      .menu-item.danger:hover:not(:disabled) {
+        background: #fef2f2;
+        color: #ef4444;
+      }
+      .menu-divider {
+        height: 1px;
+        background: #f1f5f9;
+        margin: 6px 0;
+      }
 
       .loading-state, .empty-state {
         padding: 100px;
@@ -529,14 +607,19 @@ export class ProjectsComponent implements OnInit {
   filteredProjects: GenerationRequest[] = [];
   loading = true;
   error: string | null = null;
-  
+
   currentFilter: string = 'all';
   searchTerm: string = '';
 
+  isPushingToGitHub = false;
+  pushingGenerationId?: number;
+  activeMenuProjectId: number | null = null;
+
   constructor(
     private generationService: GenerationService,
-    private toastr: ToastrService
-  ) {}
+    private toastr: ToastrService,
+    private confirmService: ConfirmService
+  ) { }
 
   ngOnInit(): void {
     this.loadProjects();
@@ -570,9 +653,9 @@ export class ProjectsComponent implements OnInit {
     // Filter by search term
     if (this.searchTerm) {
       const term = this.searchTerm.toLowerCase();
-      filtered = filtered.filter(p => 
-        (p.projectDescription?.toLowerCase().includes(term)) || 
-        (p.framework?.toLowerCase().includes(term)) ||
+      filtered = filtered.filter(p =>
+        (p.projectName?.toLowerCase().includes(term)) ||
+        (p.projectDescription?.toLowerCase().includes(term)) ||
         (p.id?.toString().includes(term))
       );
     }
@@ -632,6 +715,121 @@ export class ProjectsComponent implements OnInit {
       case 'processing': return 'EN PROCESO';
       case 'failed': return 'FALLIDO';
       default: return (status || '').toUpperCase();
+    }
+  }
+
+  async onPushToGitHub(p: GenerationRequest) {
+    const id = p.id || p.generationRequestId;
+    if (id === undefined || this.isPushingToGitHub) return;
+    const requestId = Number(id);
+
+    const hasPublished = !!p.gitHubRepoUrl?.trim();
+    const confirmed = await this.confirmService.confirm({
+      title: hasPublished ? 'Actualizar en GitHub' : 'Subir a GitHub',
+      message: hasPublished
+        ? 'El repositorio ya está vinculado. Se actualizará el contenido en GitHub (o se recreará si lo eliminaste). ¿Continuar?'
+        : '¿Subir este proyecto a GitHub usando tu PAT guardado?',
+      confirmText: hasPublished ? 'Actualizar' : 'Subir Proyecto',
+      type: 'info'
+    });
+
+    if (!confirmed) return;
+
+    this.isPushingToGitHub = true;
+    this.pushingGenerationId = requestId;
+    this.activeMenuProjectId = null;
+
+    this.generationService.pushToGitHub(requestId).subscribe({
+      next: (res) => {
+        p.gitHubRepoUrl = res.repoUrl;
+        this.toastr.success('Proyecto subido correctamente a GitHub.');
+        if (res.repoUrl) {
+          this.toastr.info(res.repoUrl, 'Repositorio en GitHub', {
+            timeOut: 8000,
+            closeButton: true,
+          });
+        }
+        this.isPushingToGitHub = false;
+        this.pushingGenerationId = undefined;
+        this.loadProjects();
+      },
+      error: (err) => {
+        this.isPushingToGitHub = false;
+        this.pushingGenerationId = undefined;
+        this.toastr.error(
+          this.extractApiErrorMessage(err, 'Error al subir a GitHub'),
+          'Error de publicación'
+        );
+      },
+    });
+  }
+
+  async onDeleteProject(p: GenerationRequest) {
+    const id = p.id || p.generationRequestId;
+    if (id === undefined) return;
+
+    const confirmed = await this.confirmService.confirm({
+      title: 'Eliminar Proyecto',
+      message: '¿Estás seguro de que deseas eliminar este proyecto generado? Esta acción no se puede deshacer.',
+      confirmText: 'Eliminar definitivamente',
+      type: 'danger'
+    });
+
+    if (!confirmed) return;
+    this.activeMenuProjectId = null;
+
+    this.generationService.deleteProject(Number(id)).subscribe({
+      next: () => {
+        this.toastr.success('Proyecto eliminado correctamente');
+        this.loadProjects();
+      },
+      error: () => this.toastr.error('No se pudo eliminar el proyecto'),
+    });
+  }
+
+  toggleCardMenu(p: GenerationRequest, event: MouseEvent): void {
+    event.stopPropagation();
+    const id = p.id || p.generationRequestId;
+    if (id !== undefined) {
+      this.activeMenuProjectId = this.activeMenuProjectId === id ? null : id;
+    }
+  }
+
+  @HostListener('document:click')
+  closeAllMenus(): void {
+    this.activeMenuProjectId = null;
+  }
+
+  private extractApiErrorMessage(err: unknown, fallback: string): string {
+    if (!err || typeof err !== 'object') {
+      return fallback;
+    }
+
+    const httpErr = err as { error?: unknown; message?: string };
+    const body = httpErr.error;
+
+    if (typeof body === 'string' && body.trim().length > 0) {
+      return body;
+    }
+
+    if (body && typeof body === 'object') {
+      const payload = body as { message?: string; title?: string };
+      if (payload.message) {
+        return payload.message;
+      }
+      if (payload.title) {
+        return payload.title;
+      }
+    }
+
+    if (httpErr.message) {
+      return httpErr.message;
+    }
+
+    try {
+      return JSON.stringify(body ?? err);
+    } catch {
+      return fallback;
     }
   }
 }

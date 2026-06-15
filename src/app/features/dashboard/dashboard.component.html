@@ -39,7 +39,7 @@
                   </svg>
                 </div>
                 <div class="project-item-info">
-                  <span class="project-item-name">{{ project.framework }}</span>
+                  <span class="project-item-name">{{ project.projectName || project.framework }}</span>
                   <span class="project-item-date">{{ project.fechaCreacion | date:'mediumDate' }}</span>
                 </div>
                 <span class="project-status-badge" [ngClass]="{
@@ -101,7 +101,7 @@
             </svg>
           </div>
           <h3 class="db-card-title">Generar código</h3>
-          <p class="db-card-desc">Genera un proyecto fullstack a partir de tu design system. Angular, React o Vue + backend .NET.</p>
+          <p class="db-card-desc">Genera un proyecto fullstack a partir de tu design system. Angular con TypeScript y Tailwind + backend .NET.</p>
         </div>
         <div class="db-card-body"></div>
         <div class="db-card-footer">

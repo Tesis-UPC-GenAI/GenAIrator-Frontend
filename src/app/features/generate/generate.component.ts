@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import {
@@ -18,7 +18,7 @@ import { ConfirmService } from '../../core/services/confirm.service';
   imports: [CommonModule, RouterModule, ReactiveFormsModule],
   styleUrls: ['./generate.component.css'],
   template: `
-    <div class="generate-page">
+    <div class="generate-page" (dragover)="$event.preventDefault()" (drop)="$event.preventDefault()">
       <div class="generate-container">
         <div class="generate-header">
           <h1>Generar Código</h1>
@@ -51,58 +51,34 @@ import { ConfirmService } from '../../core/services/confirm.service';
 
                   <div class="select-field">
                     <label>Framework</label>
-                    <div class="custom-dropdown" (click)="toggleFrameworkOpen()">
-                      <div class="dropdown-trigger">
-                        <div class="trigger-content">
-                          <div class="brand-icon" [innerHTML]="getBrandIcon(generationForm.get('framework')?.value)"></div>
-                          {{ generationForm.get('framework')?.value }}
-                        </div>
-                        <svg class="chevron-icon" [class.rotated]="isFrameworkOpen" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    <div class="tech-box">
+                      <div class="tech-info">
+                        <div class="brand-icon" [innerHTML]="getBrandIcon('Angular')"></div>
+                        Angular
                       </div>
-                      <div class="dropdown-menu" *ngIf="isFrameworkOpen">
-                        <div *ngFor="let fw of frameworks" (click)="selectFramework(fw); $event.stopPropagation()" class="dropdown-option" [class.selected]="generationForm.get('framework')?.value === fw">
-                          <div class="brand-icon" [innerHTML]="getBrandIcon(fw)"></div>
-                          {{ fw }}
-                        </div>
-                      </div>
+                      <span class="badge-standard">ESTÁNDAR</span>
                     </div>
                   </div>
 
                   <div class="select-field">
                     <label>Lenguaje</label>
-                    <div class="custom-dropdown" (click)="toggleLenguajeOpen()">
-                      <div class="dropdown-trigger">
-                        <div class="trigger-content">
-                          <div class="brand-icon" [innerHTML]="getBrandIcon(generationForm.get('lenguaje')?.value)"></div>
-                          {{ generationForm.get('lenguaje')?.value }}
-                        </div>
-                        <svg class="chevron-icon" [class.rotated]="isLenguajeOpen" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    <div class="tech-box">
+                      <div class="tech-info">
+                        <div class="brand-icon" [innerHTML]="getBrandIcon('TypeScript')"></div>
+                        TypeScript
                       </div>
-                      <div class="dropdown-menu" *ngIf="isLenguajeOpen">
-                        <div *ngFor="let lng of lenguajes" (click)="selectLenguaje(lng); $event.stopPropagation()" class="dropdown-option" [class.selected]="generationForm.get('lenguaje')?.value === lng">
-                          <div class="brand-icon" [innerHTML]="getBrandIcon(lng)"></div>
-                          {{ lng }}
-                        </div>
-                      </div>
+                      <span class="badge-standard">ESTÁNDAR</span>
                     </div>
                   </div>
 
                   <div class="select-field">
                     <label>Estilo</label>
-                    <div class="custom-dropdown" (click)="toggleEstiloOpen()">
-                      <div class="dropdown-trigger">
-                        <div class="trigger-content">
-                          <div class="brand-icon" [innerHTML]="getBrandIcon(generationForm.get('estilo')?.value)"></div>
-                          {{ generationForm.get('estilo')?.value }}
-                        </div>
-                        <svg class="chevron-icon" [class.rotated]="isEstiloOpen" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    <div class="tech-box">
+                      <div class="tech-info">
+                        <div class="brand-icon" [innerHTML]="getBrandIcon('Tailwind')"></div>
+                        Tailwind
                       </div>
-                      <div class="dropdown-menu" *ngIf="isEstiloOpen">
-                        <div *ngFor="let est of estilos" (click)="selectEstilo(est); $event.stopPropagation()" class="dropdown-option" [class.selected]="generationForm.get('estilo')?.value === est">
-                          <div class="brand-icon" [innerHTML]="getBrandIcon(est)"></div>
-                          {{ est }}
-                        </div>
-                      </div>
+                      <span class="badge-standard">ESTÁNDAR</span>
                     </div>
                   </div>
                 </div>
@@ -201,12 +177,23 @@ import { ConfirmService } from '../../core/services/confirm.service';
 
                 <div class="content-section">
                   <div class="content-label-row">
-                    <span class="content-label">Código Frontend</span>
+                    <span class="content-label">Nombre del Proyecto <span class="required-star">*</span></span>
+                  </div>
+                  <input type="text" class="custom-input" formControlName="projectName" placeholder="Escribe el nombre de tu proyecto...">
+                </div>
+
+                <div class="content-section">
+                  <div class="content-label-row">
+                    <span class="content-label">Código Frontend <span class="required-star">*</span></span>
                     <span class="badge-blue">ARCHIVOS ZIP</span>
                   </div>
                   
                   <input type="file" id="fileInput" accept=".zip" multiple (change)="onFileSelected($event)" style="display: none;">
-                  <label for="fileInput" class="upload-area">
+                  <label for="fileInput" class="upload-area"
+                         (dragover)="onDragOver($event)"
+                         (dragleave)="onDragLeave($event)"
+                         (drop)="onDrop($event)"
+                         [class.dragging]="isDragging">
                     <svg class="upload-icon-large" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                       <polyline points="17 8 12 3 7 8"></polyline>
@@ -217,9 +204,14 @@ import { ConfirmService } from '../../core/services/confirm.service';
                   </label>
 
                   <div *ngIf="frontendZipFiles.length > 0" class="files-preview">
-                    <div class="file-row" *ngFor="let f of frontendZipFiles">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
-                      {{ f.name }}
+                    <div class="file-row" *ngFor="let f of frontendZipFiles; let i = index">
+                      <div class="file-info">
+                        <svg class="file-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                        <span class="file-name">{{ f.name }}</span>
+                      </div>
+                      <button type="button" class="btn-remove-file" (click)="removeFile(i)" title="Eliminar archivo">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -238,7 +230,7 @@ import { ConfirmService } from '../../core/services/confirm.service';
                 </div>
 
                 <div class="actions-footer">
-                  <button type="button" routerLink="/dashboard" class="btn-outline">
+                  <button type="button" (click)="onCancel()" class="btn-outline">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                     Cancelar
                   </button>
@@ -255,9 +247,11 @@ import { ConfirmService } from '../../core/services/confirm.service';
     </div>
   `,
 })
-export class GenerateComponent implements OnInit {
+export class GenerateComponent implements OnInit, OnDestroy {
   generationForm: FormGroup;
   frontendZipFiles: File[] = [];
+  isDragging = false;
+  isNavigatingWithoutSaving = false;
 
   frameworks = ['Angular', 'React', 'Vue'];
   lenguajes = ['TypeScript', 'JavaScript'];
@@ -276,6 +270,7 @@ export class GenerateComponent implements OnInit {
     private confirmService: ConfirmService
   ) {
     this.generationForm = this.fb.group({
+      projectName: ['', Validators.required],
       framework: ['Angular'],
       lenguaje: ['TypeScript'],
       estilo: ['Tailwind'],
@@ -361,10 +356,21 @@ export class GenerateComponent implements OnInit {
   }
 
   async onGenerate(): Promise<void> {
-    if (this.generationForm.invalid) {
+    if (this.generationForm.invalid || this.frontendZipFiles.length === 0) {
+      let missingFields: string[] = [];
+      if (this.generationForm.get('projectName')?.invalid) {
+        missingFields.push('Nombre del Proyecto');
+      }
+      if (this.frontendZipFiles.length === 0) {
+        missingFields.push('Código Frontend (Archivo ZIP)');
+      }
+      if (this.generationForm.get('projectDescription')?.invalid) {
+        missingFields.push('Descripción del Proyecto');
+      }
+
       await this.confirmService.confirm({
         title: 'Faltan detalles',
-        message: 'Por favor, describe tu proyecto en el campo de descripción antes de generar el código.',
+        message: `Por favor, completa los campos requeridos (${missingFields.join(', ')}) antes de generar el código.`,
         confirmText: 'Entendido',
         type: 'warning',
         showCancel: false
@@ -373,6 +379,7 @@ export class GenerateComponent implements OnInit {
     }
 
     const form = new FormData();
+    form.append('projectName', this.generationForm.get('projectName')?.value || '');
     form.append('framework', this.generationForm.get('framework')?.value || '');
     form.append('lenguaje', this.generationForm.get('lenguaje')?.value || '');
     form.append('estilo', this.generationForm.get('estilo')?.value || '');
@@ -386,6 +393,7 @@ export class GenerateComponent implements OnInit {
 
     this.generationService.startGenerationForm(form).subscribe({
       next: (res) => {
+        this.isNavigatingWithoutSaving = true;
         this.toastr.success('Generación iniciada correctamente');
         this.router.navigate(['/dashboard']);
       },
@@ -399,20 +407,99 @@ export class GenerateComponent implements OnInit {
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
+      let containsInvalidFiles = false;
+      const filesToAdd: File[] = [];
       for (let i = 0; i < input.files.length; i++) {
         const file = input.files.item(i);
         if (!file) continue;
         if (file.name.toLowerCase().endsWith('.zip')) {
-          this.frontendZipFiles.push(file);
+          filesToAdd.push(file);
         } else {
-          this.toastr.warning('Por favor sube solo archivos .zip');
-          input.value = '';
-          break;
+          containsInvalidFiles = true;
         }
+      }
+
+      if (filesToAdd.length > 0) {
+        this.frontendZipFiles.push(...filesToAdd);
+      }
+
+      if (containsInvalidFiles) {
+        this.toastr.warning('Solo se permiten archivos con extensión .zip. Algunos archivos no se agregaron.');
+      }
+      input.value = '';
+    }
+  }
+
+  onDragOver(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragging = true;
+  }
+
+  onDragLeave(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragging = false;
+  }
+
+  onDrop(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragging = false;
+
+    const files = event.dataTransfer?.files;
+    if (files && files.length > 0) {
+      let containsInvalidFiles = false;
+      const filesToAdd: File[] = [];
+      for (let i = 0; i < files.length; i++) {
+        const file = files.item(i);
+        if (!file) continue;
+        if (file.name.toLowerCase().endsWith('.zip')) {
+          filesToAdd.push(file);
+        } else {
+          containsInvalidFiles = true;
+        }
+      }
+
+      if (filesToAdd.length > 0) {
+        this.frontendZipFiles.push(...filesToAdd);
+      }
+
+      if (containsInvalidFiles) {
+        this.toastr.warning('Solo se permiten archivos con extensión .zip. Algunos archivos no se agregaron.');
       }
     }
   }
 
-  ngOnInit(): void {}
+  removeFile(index: number): void {
+    this.frontendZipFiles.splice(index, 1);
+  }
+
+  onCancel(): void {
+    this.isNavigatingWithoutSaving = true;
+    this.router.navigate(['/dashboard']);
+  }
+
+  ngOnInit(): void {
+    const savedState = this.generationService.getSavedFormState();
+    if (savedState) {
+      this.generationForm.patchValue(savedState);
+    }
+    const savedFiles = this.generationService.getSavedZipFiles();
+    if (savedFiles && savedFiles.length > 0) {
+      this.frontendZipFiles = [...savedFiles];
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (!this.isNavigatingWithoutSaving) {
+      this.generationService.setSavedState(
+        this.generationForm.value,
+        this.frontendZipFiles
+      );
+    } else {
+      this.generationService.clearSavedState();
+    }
+  }
 }
 
