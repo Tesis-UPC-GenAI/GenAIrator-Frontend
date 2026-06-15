@@ -202,6 +202,18 @@
           </span>
         </div>
         <div class="card-content">
+          <div class="quality-action-row" *ngIf="isProjectCompleted()">
+            <button
+              type="button"
+              class="btn btn-action quality-analyze-btn"
+              (click)="analyzeQuality()"
+              [disabled]="isQualityAnalyzeButtonDisabled()"
+            >
+              <span class="spinner-small btn-spinner" *ngIf="isAnalyzingQuality || isQualityAnalysisInProgress()" aria-hidden="true"></span>
+              {{ getQualityAnalyzeButtonLabel() }}
+            </button>
+          </div>
+
           <p *ngIf="isQualityNotStarted() && !hasQualityMetrics()" class="quality-empty-message">
             Validación externa no ejecutada
           </p>

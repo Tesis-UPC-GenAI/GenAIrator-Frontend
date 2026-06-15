@@ -400,6 +400,15 @@
   line-height: 1.5;
 }
 
+.quality-action-row {
+  margin-bottom: 12px;
+}
+
+.quality-analyze-btn {
+  width: 100%;
+  justify-content: center;
+}
+
 .quality-error-message {
   margin: 0 0 12px;
   padding: 10px 12px;

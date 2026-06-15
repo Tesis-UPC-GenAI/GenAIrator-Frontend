@@ -22,6 +22,7 @@ export class ResultsComponent implements OnInit, OnDestroy {
   canDownload = false;
   currentUser$?: Observable<User | null>;
   isPushingToGitHub = false;
+  isAnalyzingQuality = false;
   pushingGenerationId?: number;
   private pollTimer: number | null = null;
 
@@ -69,19 +70,48 @@ export class ResultsComponent implements OnInit, OnDestroy {
   getQualityAnalysisLabel(): string {
     switch (this.getQualityAnalysisStatus()) {
       case 'Pending':
-        return 'Análisis pendiente';
+        return 'Validación pendiente';
       case 'Running':
-        return 'Análisis en curso';
+        return 'Analizando calidad';
       case 'Completed':
         return 'Análisis completado';
       case 'Failed':
-        return 'Análisis fallido';
+        return 'Error en análisis';
       case 'Skipped':
         return 'Análisis omitido';
       case 'NotStarted':
       default:
         return 'Validación externa no ejecutada';
     }
+  }
+
+  isProjectCompleted(): boolean {
+    return (this.request?.estado || this.request?.status || '').toLowerCase() === 'completed';
+  }
+
+  isQualityAnalysisInProgress(): boolean {
+    const status = this.getQualityAnalysisStatus();
+    return status === 'Pending' || status === 'Running';
+  }
+
+  isQualityAnalyzeButtonDisabled(): boolean {
+    return (
+      !this.isProjectCompleted() ||
+      this.isAnalyzingQuality ||
+      this.isQualityAnalysisInProgress()
+    );
+  }
+
+  getQualityAnalyzeButtonLabel(): string {
+    if (this.isAnalyzingQuality || this.isQualityAnalysisInProgress()) {
+      return 'Analizando...';
+    }
+
+    if (this.getQualityAnalysisStatus() === 'Completed') {
+      return 'Re-ejecutar validación';
+    }
+
+    return 'Ejecutar validación externa';
   }
 
   getQualityAnalysisBadgeClass(): string {
@@ -172,7 +202,7 @@ export class ResultsComponent implements OnInit, OnDestroy {
           this.componentsCount = r.componentesGenerados ?? 0;
           this.linesOfCode = r.lineasDeCodigo ?? 0;
           const status = (r.estado || r.status || '').toLowerCase();
-          if (status !== 'completed' && status !== 'failed') {
+          if (this.shouldContinuePolling(r)) {
             this.startPolling(id);
           } else {
             this.stopPolling();
@@ -191,10 +221,9 @@ export class ResultsComponent implements OnInit, OnDestroy {
         if (r) {
           this.request = r;
           this.canDownload = (r.estado || r.status || '').toLowerCase() === 'completed';
-          if (
-            (r.estado || r.status || '').toLowerCase() === 'completed' ||
-            (r.estado || r.status || '').toLowerCase() === 'failed'
-          ) {
+          if (this.shouldContinuePolling(r)) {
+            this.startPolling(id);
+          } else {
             this.stopPolling();
           }
         }
@@ -202,6 +231,17 @@ export class ResultsComponent implements OnInit, OnDestroy {
       error: () => {
       },
     });
+  }
+
+  private shouldContinuePolling(request: GenerationRequest): boolean {
+    const generationStatus = (request.estado || request.status || '').toLowerCase();
+    const qualityStatus = (request.qualityAnalysisStatus || 'NotStarted').trim();
+
+    if (generationStatus !== 'completed' && generationStatus !== 'failed') {
+      return true;
+    }
+
+    return qualityStatus === 'Pending' || qualityStatus === 'Running';
   }
 
   private startPolling(id: number) {
@@ -214,6 +254,37 @@ export class ResultsComponent implements OnInit, OnDestroy {
       clearInterval(this.pollTimer);
       this.pollTimer = null;
     }
+  }
+
+  analyzeQuality(): void {
+    if (!this.request || this.isAnalyzingQuality || this.isQualityAnalyzeButtonDisabled()) {
+      return;
+    }
+
+    const id = Number(this.request.generationRequestId || (this.request as any).id);
+
+    this.isAnalyzingQuality = true;
+    this.generationService.analyzeQuality(id).pipe(
+      finalize(() => {
+        this.isAnalyzingQuality = false;
+      }),
+    ).subscribe({
+      next: (res) => {
+        this.toastr.success(
+          res?.message || 'Análisis de calidad encolado. Se procesará en segundo plano.',
+        );
+        this.refreshStatus(id);
+        if (!this.pollTimer) {
+          this.startPolling(id);
+        }
+      },
+      error: (err) => {
+        this.toastr.error(
+          this.extractApiErrorMessage(err, 'Error al encolar el análisis de calidad'),
+          'Validación externa',
+        );
+      },
+    });
   }
 
   async onPushToGitHub() {

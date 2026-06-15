@@ -151,4 +151,21 @@ export class GenerationService {
       headers,
     });
   }
+
+  analyzeQuality(id: number): Observable<AnalyzeQualityResponse> {
+    const token = this.auth.getToken();
+    const headers = token
+      ? new HttpHeaders({ Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' })
+      : new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    return this.http.post<AnalyzeQualityResponse>(`${this.baseUrl}/${id}/analyze-quality`, null, {
+      headers,
+    });
+  }
+}
+
+export interface AnalyzeQualityResponse {
+  message: string;
+  qualityAnalysisStatus: string;
+  generationRequestId: number;
 }
