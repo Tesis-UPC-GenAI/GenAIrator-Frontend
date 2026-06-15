@@ -478,6 +478,13 @@
   font-size: 13px;
 }
 
+.zip-persistence-hint {
+  margin: 10px 0 0;
+  font-size: 12px;
+  color: #64748b;
+  line-height: 1.4;
+}
+
 /* Actions Footer */
 .actions-footer {
   display: flex;

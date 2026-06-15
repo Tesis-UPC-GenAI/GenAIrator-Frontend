@@ -214,6 +214,9 @@ import { ConfirmService } from '../../core/services/confirm.service';
                       </button>
                     </div>
                   </div>
+                  <p class="zip-persistence-hint" *ngIf="frontendZipFiles.length > 0">
+                    Los archivos seleccionados se conservan al navegar dentro de la app, pero se pierden si recargas la página.
+                  </p>
                 </div>
 
                 <div class="content-section">
@@ -399,7 +402,10 @@ export class GenerateComponent implements OnInit, OnDestroy {
       },
       error: (err) => {
         console.error('Error iniciando generación', err);
-        this.toastr.error('Error al iniciar la generación');
+        this.toastr.error(
+          this.extractApiErrorMessage(err, 'Error al iniciar la generación'),
+          'No se pudo generar'
+        );
       },
     });
   }
@@ -499,6 +505,39 @@ export class GenerateComponent implements OnInit, OnDestroy {
       );
     } else {
       this.generationService.clearSavedState();
+    }
+  }
+
+  private extractApiErrorMessage(err: unknown, fallback: string): string {
+    if (!err || typeof err !== 'object') {
+      return fallback;
+    }
+
+    const httpErr = err as { error?: unknown; message?: string };
+    const body = httpErr.error;
+
+    if (typeof body === 'string' && body.trim().length > 0) {
+      return body;
+    }
+
+    if (body && typeof body === 'object') {
+      const payload = body as { message?: string; title?: string };
+      if (payload.message) {
+        return payload.message;
+      }
+      if (payload.title) {
+        return payload.title;
+      }
+    }
+
+    if (httpErr.message) {
+      return httpErr.message;
+    }
+
+    try {
+      return JSON.stringify(body ?? err);
+    } catch {
+      return fallback;
     }
   }
 }

@@ -4,8 +4,10 @@ import { RouterModule } from '@angular/router';
 import { GenerationService } from '../../core/services/generation.service';
 import { Observable } from 'rxjs';
 import { GenerationRequest } from '../../core/models/generation-request.model';
+import { User } from '../../core/models/user.model';
 import { ToastrService } from 'ngx-toastr';
 import { ConfirmService } from '../../core/services/confirm.service';
+import { UserService } from '../../core/services/user.service';
 
 @Component({
   selector: 'app-projects',
@@ -181,10 +183,10 @@ import { ConfirmService } from '../../core/services/confirm.service';
                 Descargar
               </button>
               <button class="btn-icon-action" 
-                      [disabled]="(p.status || p.estado) !== 'Completed'"
+                      [disabled]="(p.status || p.estado) !== 'Completed' || isPushingToGitHub || !(currentUser$ | async)?.gitHubPatExists"
                       [class.spinning]="pushingGenerationId === (p.id || p.generationRequestId)"
                       (click)="onPushToGitHub(p); $event.stopPropagation()"
-                      [title]="p.gitHubRepoUrl ? 'Actualizar en GitHub' : 'Subir a GitHub'">
+                      [title]="!(currentUser$ | async)?.gitHubPatExists ? 'Configura tu GitHub PAT en Configuración para publicar proyectos.' : (isPushingToGitHub ? 'Subida en curso' : (p.gitHubRepoUrl ? 'Actualizar en GitHub' : 'Subir a GitHub'))">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
               </button>
               <div class="actions-menu-container">
@@ -614,14 +616,18 @@ export class ProjectsComponent implements OnInit {
   isPushingToGitHub = false;
   pushingGenerationId?: number;
   activeMenuProjectId: number | null = null;
+  currentUser$?: Observable<User | null>;
 
   constructor(
     private generationService: GenerationService,
     private toastr: ToastrService,
-    private confirmService: ConfirmService
+    private confirmService: ConfirmService,
+    private userService: UserService
   ) { }
 
   ngOnInit(): void {
+    this.currentUser$ = this.userService.currentUser$;
+    this.userService.getMe().subscribe({ next: () => {}, error: () => {} });
     this.loadProjects();
   }
 
