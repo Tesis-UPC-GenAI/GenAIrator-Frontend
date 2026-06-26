@@ -1,4 +1,4 @@
-<header class="header">
+<header class="header" [class.menu-open]="isMenuOpen">
   <div class="container">
     <div class="header-content">
       <div class="header-brand">
@@ -13,54 +13,60 @@
       </div>
 
       <nav class="header-nav" [class.is-open]="isMenuOpen" aria-label="Navegación principal">
-        <div *ngIf="isAuthenticated" class="nav-links">
-          <a
-            routerLink="/dashboard"
-            routerLinkActive="active"
-            class="nav-link"
-            (click)="isMenuOpen = false"
-          >
-            Dashboard
-          </a>
-          <a
-            routerLink="/projects"
-            routerLinkActive="active"
-            class="nav-link"
-            (click)="isMenuOpen = false"
-          >
-            Proyectos
-          </a>
-          <a
-            routerLink="/import-design-system"
-            routerLinkActive="active"
-            class="nav-link"
-            (click)="isMenuOpen = false"
-          >
-            ¿Cómo funciona?
-          </a>
-          <a
-            routerLink="/generate"
-            routerLinkActive="active"
-            class="nav-link"
-            (click)="isMenuOpen = false"
-          >
-            Generar
-          </a>
+        <div class="mobile-menu-header hide-desktop">
+          <span class="brand-text">GenAIrator</span>
+          <button class="close-menu-btn" (click)="closeMenu()" aria-label="Cerrar menú">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+        </div>
+
+        <div class="mobile-menu-content">
+          <div *ngIf="isAuthenticated" class="nav-links">
+            <a routerLink="/dashboard" routerLinkActive="active" class="nav-link" (click)="closeMenu()">
+              <svg class="nav-icon hide-desktop" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+              Dashboard
+            </a>
+            <a routerLink="/projects" routerLinkActive="active" class="nav-link" (click)="closeMenu()">
+              <svg class="nav-icon hide-desktop" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+              Proyectos
+            </a>
+            <a routerLink="/import-design-system" routerLinkActive="active" class="nav-link" (click)="closeMenu()">
+              <svg class="nav-icon hide-desktop" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+              ¿Cómo funciona?
+            </a>
+            <a routerLink="/generate" routerLinkActive="active" class="nav-link" (click)="closeMenu()">
+              <svg class="nav-icon hide-desktop" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path></svg>
+              Generar
+            </a>
+          </div>
+          
+          <div *ngIf="isAuthenticated" class="mobile-nav-divider hide-desktop"></div>
 
           <div *ngIf="currentUser" class="user-info hide-desktop">
-            <div class="user-name">{{ currentUser.name }}</div>
-            <a routerLink="/settings" class="nav-link" (click)="isMenuOpen = false">Configuración</a>
-            <button (click)="logout(); isMenuOpen = false" class="nav-link btn-logout">Cerrar sesión</button>
+            <div class="user-profile-card">
+              <div class="avatar-circle">{{ currentUser.name.charAt(0).toUpperCase() }}</div>
+              <div class="user-details">
+                <div class="user-name-text">{{ currentUser.name }}</div>
+                <div class="user-email-text">{{ currentUser.email || 'usuario@genairator.app' }}</div>
+              </div>
+            </div>
+          </div>
+          
+          <div *ngIf="!isAuthenticated" class="auth-links hide-desktop">
+            <a routerLink="/register" class="btn btn-primary btn-full-width" (click)="closeMenu()">
+              Registrarse
+            </a>
+            <a routerLink="/login" class="btn btn-outline btn-full-width" (click)="closeMenu()">
+              Iniciar sesión
+            </a>
           </div>
         </div>
-        
-        <div *ngIf="!isAuthenticated" class="auth-links hide-desktop">
-          <a routerLink="/login" class="btn btn-link" (click)="isMenuOpen = false">
-            Iniciar sesión
-          </a>
-          <a routerLink="/register" class="btn btn-primary" (click)="isMenuOpen = false">
-            Registrarse
-          </a>
+
+        <div class="mobile-menu-footer hide-desktop">
+          <button *ngIf="isAuthenticated" (click)="logout()" class="btn btn-danger-outline btn-full-width mb-3">
+            Cerrar sesión
+          </button>
+          <div class="copyright-text">© 2024 GenAIrator. Todos los derechos reservados.</div>
         </div>
       </nav>
 
@@ -94,10 +100,10 @@
         </div>
 
         <div *ngIf="!isAuthenticated" class="auth-links hide-mobile">
-          <a routerLink="/login" class="btn btn-link" (click)="isMenuOpen = false">
+          <a routerLink="/login" class="btn btn-link" (click)="closeMenu()">
             Iniciar sesión
           </a>
-          <a routerLink="/register" class="btn btn-primary" (click)="isMenuOpen = false">
+          <a routerLink="/register" class="btn btn-primary" (click)="closeMenu()">
             Registrarse
           </a>
         </div>

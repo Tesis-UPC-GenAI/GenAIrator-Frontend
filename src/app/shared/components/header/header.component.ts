@@ -31,7 +31,15 @@ export class HeaderComponent implements OnInit {
     this.isMenuOpen = !this.isMenuOpen;
     if (this.isMenuOpen) {
       this.isUserDropdownOpen = false;
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
     }
+  }
+
+  closeMenu(): void {
+    this.isMenuOpen = false;
+    document.body.style.overflow = '';
   }
 
   toggleUserDropdown(): void {
@@ -45,7 +53,7 @@ export class HeaderComponent implements OnInit {
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);
-    this.isMenuOpen = false;
+    this.closeMenu();
     this.isUserDropdownOpen = false;
   }
 
