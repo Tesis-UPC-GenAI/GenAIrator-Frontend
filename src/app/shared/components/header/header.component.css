@@ -316,22 +316,23 @@
 
 @media (max-width: 767px) {
   .header-content {
-    grid-template-columns: 1fr;
-    gap: var(--spacing-md);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 
   .header-brand {
-    justify-self: center;
+    justify-self: start;
   }
 
   .header-nav {
-    order: 2;
+    order: 3;
     justify-content: center;
   }
 
   .header-actions {
-    order: 3;
-    justify-self: center;
+    order: 2;
+    justify-self: end;
   }
 
   .header-nav {
@@ -385,9 +386,13 @@
   }
 
   .user-info {
+    display: flex;
     flex-direction: column;
     align-items: stretch;
     gap: var(--spacing-sm);
+    margin-top: var(--spacing-md);
+    border-top: 1px solid var(--border-color);
+    padding-top: var(--spacing-md);
   }
 
   .user-name {
@@ -396,11 +401,18 @@
     background: var(--bg-secondary);
     border-radius: var(--radius-md);
     font-weight: 700;
+    max-width: none;
   }
 
   .btn-logout {
     width: 100%;
     text-align: center;
+    background: transparent;
+    border: none;
+    font-size: inherit;
+    font-family: inherit;
+    cursor: pointer;
+    color: var(--color-error);
   }
 
   .auth-links {

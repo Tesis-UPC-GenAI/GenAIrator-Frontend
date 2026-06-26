@@ -33,7 +33,7 @@
   align-items: start;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
   .generate-grid {
     grid-template-columns: 320px 1fr;
   }
@@ -602,4 +602,60 @@
 .btn-remove-file:hover {
   background: #fee2e2;
   color: #ef4444;
+}
+
+@media (max-width: 767px) {
+  .config-sidebar {
+    position: static !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .generate-container { padding: 0 16px; }
+  
+  .sidebar-card, .main-card { 
+    padding: 16px; 
+  }
+  
+  .generate-grid {
+    gap: 16px;
+  }
+  
+  .actions-footer { 
+    flex-wrap: wrap-reverse; 
+    gap: 12px; 
+  }
+  
+  .btn-outline, .btn-generate { 
+    flex: 1 1 100%; 
+    justify-content: center; 
+    width: 100%;
+  }
+  
+  .dropdown-trigger { 
+    padding: 8px 12px; 
+  }
+  
+  .trigger-content { 
+    gap: 8px; 
+    font-size: 13px; 
+  }
+  
+  .badge-standard { 
+    font-size: 9px; 
+    padding: 2px 6px; 
+  }
+  
+  .upload-area { 
+    padding: 16px; 
+  }
+  
+  .upload-title { 
+    font-size: 14px; 
+  }
+  
+  .content-label-row { 
+    flex-wrap: wrap; 
+    gap: 8px; 
+  }
 }

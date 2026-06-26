@@ -616,15 +616,120 @@
 
 /* Responsiveness */
 @media (max-width: 1024px) {
-  .stats-card { flex-direction: column; gap: 32px; align-items: stretch; }
-  .stats-section { padding-right: 0; }
-  .main-divider { display: none; }
-  .actions-section { width: 100%; }
+  .stats-card {
+    padding: 24px 16px;
+  }
+  .stats-section {
+    padding-right: 12px;
+  }
+  .main-divider {
+    margin: 0 12px;
+  }
+  .actions-section {
+    width: 240px;
+  }
+  .actions-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .btn-full {
+    grid-column: span 1 !important;
+  }
+  .stat-num {
+    font-size: 20px;
+  }
+  .stat-label {
+    font-size: 9px;
+    text-align: center;
+  }
+  .animated-success-icon {
+    width: 50px;
+    height: 50px;
+  }
+  .icon-circle {
+    width: 32px;
+    height: 32px;
+  }
+  .icon-circle svg {
+    width: 18px;
+    height: 18px;
+  }
 }
 
-@media (max-width: 768px) {
-  .stats-section { flex-direction: column; gap: 32px; }
-  .divider-v { display: none; }
-  .details-grid { grid-template-columns: 1fr; }
-  .main-title { font-size: 32px; }
+@media (max-width: 767px) {
+  .stats-card { 
+    flex-direction: column; 
+    gap: 24px; 
+    align-items: stretch;
+    padding: 20px;
+  }
+  .main-divider, .divider-v { 
+    display: none; 
+  }
+  .actions-section { 
+    width: 100%; 
+  }
+  .stats-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    padding-right: 0;
+  }
+  .animated-success-icon {
+    margin: 0 auto;
+  }
+  .details-grid { 
+    grid-template-columns: 1fr; 
+  }
+  .main-title { 
+    font-size: 28px; 
+  }
+  
+  .timeline-content {
+    flex-wrap: wrap;
+    gap: 4px 12px;
+  }
+  .log-time {
+    flex: 1 1 100%;
+    margin-bottom: 4px;
+  }
+  .log-msg {
+    flex: 1;
+  }
 }
+
+@media (max-width: 480px) {
+  .container { padding: 0 16px; }
+  .stats-card, .detail-card, .log-card { padding: 16px; }
+  
+  .actions-grid { grid-template-columns: 1fr !important; }
+  .btn-full { grid-column: span 1 !important; }
+  
+  .detail-item {
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  
+  .github-repo-link {
+    word-break: break-all;
+    display: inline-block;
+    max-width: 100%;
+  }
+  
+  .log-msg {
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+  
+  .card-header-with-badge {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .quality-analysis-badge {
+    white-space: normal;
+    text-align: left;
+  }
+}
+

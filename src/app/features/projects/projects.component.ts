@@ -597,9 +597,41 @@ import { UserService } from '../../core/services/user.service';
       @media (max-width: 1024px) { .stats-overview { grid-template-columns: repeat(2, 1fr); } }
       @media (max-width: 768px) {
         .projects-grid { grid-template-columns: 1fr; }
-        .stats-overview { grid-template-columns: 1fr; }
         .toolbar { flex-direction: column; align-items: stretch; }
         .main-title { font-size: 36px; }
+        .filter-tabs { overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; }
+        .filter-tabs::-webkit-scrollbar { display: none; }
+        .tab-btn { padding: 8px 12px; font-size: 13px; white-space: nowrap; flex: 1; text-align: center; }
+      }
+      @media (max-width: 480px) {
+        .stats-overview { gap: 12px; margin-bottom: 32px; }
+        .overview-card { padding: 16px; gap: 12px; flex-direction: column; align-items: flex-start; border-radius: 16px; }
+        .overview-icon-box { width: 40px; height: 40px; border-radius: 12px; }
+        .overview-icon-box svg { width: 20px; height: 20px; }
+        .ov-label { font-size: 10px; line-height: 1.2; margin-bottom: 2px; }
+        .ov-value { font-size: 24px; margin-bottom: 2px; }
+        .ov-sub { font-size: 10px; line-height: 1.2; }
+
+        .project-card { padding: 16px; }
+        .card-top { flex-wrap: wrap; gap: 12px; align-items: center; }
+        .tech-icon-box { width: 40px; height: 40px; }
+        .tech-icon-box svg { width: 18px; height: 18px; }
+        .p-name { font-size: 20px; }
+        .status-badge-container { height: auto; width: auto; margin: 0; }
+        
+        .card-metrics { flex-wrap: nowrap; gap: 4px; justify-content: space-between; align-items: flex-start; }
+        .metric-divider { display: block; margin: 0 4px; height: 24px; align-self: center; }
+        .metric-item { flex: 1; flex-direction: column; align-items: center; text-align: center; gap: 2px; }
+        .m-icon { display: none; }
+        .m-val { align-items: center; }
+        .m-val .num { font-size: 14px; }
+        .m-val .lab { font-size: 10px; white-space: normal; line-height: 1.2; }
+        
+        .card-actions { flex-wrap: wrap; gap: 8px; }
+        .btn-main-action { flex: 1 1 100%; height: 42px; font-size: 13px; }
+        .btn-sub-action { flex: 1 1 calc(100% - 100px); height: 42px; font-size: 13px; }
+        .btn-icon-action { width: 42px; height: 42px; }
+        .card-footer-divider { margin: 0 -16px 16px -16px; }
       }
     `,
   ],

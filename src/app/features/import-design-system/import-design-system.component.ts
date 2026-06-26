@@ -179,7 +179,7 @@ import { RouterModule } from '@angular/router';
 
     .steps-container {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
       gap: 24px;
       margin-bottom: 48px;
@@ -241,6 +241,7 @@ import { RouterModule } from '@angular/router';
       color: #cbd5e1;
       display: flex;
       align-items: center;
+      margin-top: 124px;
     }
 
     .summary-divider {
@@ -305,15 +306,30 @@ import { RouterModule } from '@angular/router';
     }
 
     @media (max-width: 1024px) {
+      .main-card { padding: 32px; }
+      .steps-container { gap: 16px; }
+      .step-image-container { height: 120px; }
+      .step-arrow { margin-top: 104px; }
+      .step-card h3 { font-size: 16px; }
+      .summary-row { gap: 12px; }
+    }
+
+    @media (max-width: 767px) {
+      .main-card { padding: 24px; }
+      .header-section h1 { font-size: 28px; }
+      .header-section p { font-size: 16px; }
       .steps-container {
         flex-direction: column;
+        gap: 32px;
       }
-      .step-arrow {
-        transform: rotate(90deg);
-        margin: 12px 0;
-      }
+      .step-arrow,
+      .step-image-container,
+      .summary-divider,
       .summary-row {
-        flex-wrap: wrap;
+        display: none;
+      }
+      .step-number-circle {
+        margin-bottom: 12px;
       }
     }
   `]

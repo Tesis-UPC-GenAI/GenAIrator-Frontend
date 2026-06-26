@@ -46,11 +46,26 @@
           >
             Generar
           </a>
+
+          <div *ngIf="currentUser" class="user-info hide-desktop">
+            <div class="user-name">{{ currentUser.name }}</div>
+            <a routerLink="/settings" class="nav-link" (click)="isMenuOpen = false">Configuración</a>
+            <button (click)="logout(); isMenuOpen = false" class="nav-link btn-logout">Cerrar sesión</button>
+          </div>
+        </div>
+        
+        <div *ngIf="!isAuthenticated" class="auth-links hide-desktop">
+          <a routerLink="/login" class="btn btn-link" (click)="isMenuOpen = false">
+            Iniciar sesión
+          </a>
+          <a routerLink="/register" class="btn btn-primary" (click)="isMenuOpen = false">
+            Registrarse
+          </a>
         </div>
       </nav>
 
       <div class="header-actions">
-        <div *ngIf="isAuthenticated && currentUser" class="user-dropdown-container">
+        <div *ngIf="isAuthenticated && currentUser" class="user-dropdown-container hide-mobile">
           <button class="user-dropdown-trigger" (click)="toggleUserDropdown()">
             <span class="user-name">{{ currentUser.name }}</span>
             <svg class="chevron-icon" [class.rotated]="isUserDropdownOpen" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -78,7 +93,7 @@
           </div>
         </div>
 
-        <div *ngIf="!isAuthenticated" class="auth-links">
+        <div *ngIf="!isAuthenticated" class="auth-links hide-mobile">
           <a routerLink="/login" class="btn btn-link" (click)="isMenuOpen = false">
             Iniciar sesión
           </a>
